@@ -1,0 +1,183 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.SwerveModuleSub;
+import frc.robot.Constants;
+import utilities.SwerveModuleConfig;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.I2C.Port;
+import java.util.Vector;
+import java.lang.Math;
+
+// Usefull https://compendium.readthedocs.io/en/latest/tasks/drivetrains/swerve.html
+
+public class DriveTrainSub extends SubsystemBase {
+  /** Creates a new DriveTrainSub. */
+  private SwerveModuleSub[] swerveModuleSubs = new SwerveModuleSub[Constants.SWERVE_MODULE_COUNT];
+  private AHRS navx;
+
+  public DriveTrainSub() {
+    int i;
+
+    // Config swerve modules.
+    for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      swerveModuleSubs[i] = new SwerveModuleSub(Constants.SWERVE_MODULE_CONFIGS[i]);
+    }
+
+    navx = new AHRS(Port.kOnboard);
+    resetGyro();
+  }
+
+  public void resetGyro() {
+    navx.reset();
+    navx.zeroYaw();
+  }
+
+  public double getPitch() {
+    return navx.getPitch();
+  }
+
+  public double getRoll() {
+    return navx.getRoll();
+  }
+
+  public double getYaw() {
+    return navx.getYaw();
+  }
+
+  public void stopTurn() {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      swerveModuleSubs[i].stopTurnMotor();
+    }
+  }
+
+  public void stopDrive() {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      swerveModuleSubs[i].stopWheelMotor();
+    }
+  }
+
+  public int numberOfMoulesAtSpeed() {
+    int count = 0;
+
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      count += swerveModuleSubs[i].atSpeed() ? 1 : 0;
+    }
+
+    return count;
+  }
+
+  public int numberOfMoulesAtAngle() {
+    int count = 0;
+
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      count += swerveModuleSubs[i].atAngle() ? 1 : 0;
+    }
+
+    return count;
+  }
+
+  public boolean allToSpeed() {
+    return numberOfMoulesAtSpeed() == Constants.SWERVE_MODULE_COUNT;
+  }
+
+  public boolean allToAngle() {
+    return numberOfMoulesAtAngle() == Constants.SWERVE_MODULE_COUNT;
+  }
+
+  // Look in Constants.java for ids.
+  public SwerveModuleSub getSwerveModuleFromId(int id) {
+    return swerveModuleSubs[id];
+  }
+
+  public SwerveModuleSub[] getSwerveModuleSubs() {
+    return swerveModuleSubs;
+  }
+
+  public void stop() {
+    stopTurn();
+    stopDrive();
+  }
+
+  private static double[] normalizeSpeeds(double []speeds) {
+    int i;
+    double []normalizedSpeeds = speeds.clone();
+    double max = normalizedSpeeds[0];
+
+    // Get max.
+    for (double v : normalizedSpeeds) {
+      max = Math.max(max, v);
+    }
+
+    // Doesn't need to be normalized.
+    if (max <= 1) {
+      return normalizedSpeeds;
+    }
+
+    // Normalize.
+    for (i = 0; i < normalizedSpeeds.length; i++) {
+      normalizedSpeeds[i] /= max;
+    }
+
+    return normalizedSpeeds;
+  }
+
+  public void run() {
+
+    // Run the swerve module run methods.
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      swerveModuleSubs[i].run();
+
+      // Print debug info.
+      SmartDashboard.putString(
+        String.format("Swerve Module %d info", i),
+        String.format("Speed: %lf, Angle: %lf", swerveModuleSubs[i].getSpeed(), swerveModuleSubs[i].getAngle())
+      );
+    }
+
+    SmartDashboard.putNumber("Yaw", getYaw());
+  }
+
+  // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf
+  public void setSwerveDrive(double strafe, double speed, double rotation) {
+    int i;
+
+    double a = strafe - rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
+    double b = strafe + rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
+    double c = speed - rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+    double d = speed + rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+
+    double []moduleSpeeds = {
+      Math.hypot(b, c),
+      Math.hypot(b, d),
+      Math.hypot(a, c),
+      Math.hypot(a, d)
+    };
+
+    double []moduleAngles = {
+      Math.toDegrees(Math.atan2(b, c)),
+      Math.toDegrees(Math.atan2(b, d)),
+      Math.toDegrees(Math.atan2(a, c)),
+      Math.toDegrees(Math.atan2(a, d))
+    };
+
+    // Normalize speeds.
+    moduleSpeeds = normalizeSpeeds(moduleSpeeds);
+
+    // Set speed and angle of each module.
+    for (i = 0; i < moduleSpeeds.length; i++) {
+      swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i]);
+      swerveModuleSubs[i].setDesiredAngle(moduleAngles[i]);
+    }
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+}
