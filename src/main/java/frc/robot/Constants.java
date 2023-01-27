@@ -49,4 +49,8 @@ public final class Constants {
     public static final int RIGHT_STICK_X = 4;
     public static final int LEFT_STICK_Y = 1;
     public static final int LEFT_STICK_X = 0;
+
+    // Turn motor directions.
+    public static final int TURN_MOTOR_CLOCKWISE = 1;
+    public static final int TURN_MOTOR_COUNTERCLOCKWISE = -1;
 }

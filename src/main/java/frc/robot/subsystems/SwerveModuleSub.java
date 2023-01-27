@@ -18,6 +18,7 @@ import edu.wpi.first.math.MathUtil;
 import utilities.ConfigurablePID;
 import utilities.PIDConfiguration;
 import utilities.SwerveModuleConfig;
+import utilities.MathTools;
 
 public class SwerveModuleSub extends SubsystemBase {
   /** Creates a new SwerveModuleSub. */
@@ -31,9 +32,12 @@ public class SwerveModuleSub extends SubsystemBase {
 
   // Turn.
   private ConfigurablePID turnPid;
+  private PIDConfiguration turnPidConfig;
   private double desiredAngle = 0.0;
   private Spark turnMotor;
   private Encoder turnEncoder;
+  private int turnMotorDirection = Constants.TURN_MOTOR_CLOCKWISE;
+  private double angleError = 0.0;
 
   public SwerveModuleSub(SwerveModuleConfig config) {
     configuration = config;
@@ -64,6 +68,7 @@ public class SwerveModuleSub extends SubsystemBase {
 
     // Turn pid.
     turnPid = new ConfigurablePID(Constants.SWERVE_MODULE_TURN_PID);
+    turnPidConfig = Constants.SWERVE_MODULE_TURN_PID;
   }
 
   public void setWheelMotor(double speed) {
@@ -120,7 +125,7 @@ public class SwerveModuleSub extends SubsystemBase {
   }
 
   public double getAngleError() {
-    return turnPid.getError();
+    return angleError;
   }
 
   public boolean atSpeed() {
@@ -134,6 +139,18 @@ public class SwerveModuleSub extends SubsystemBase {
   public void run() {
     // Wheel.
     //setWheelMotor(wheelPid.runPID(desiredSpeed, getSpeed()));
+
+    double angleErrorAbs = Math.abs(desiredAngle - getAngle());
+
+    // Set motor direction and proportional gain.
+    // Don't run code in if statement if already set to correct direction.
+    if (angleErrorAbs <= 180.0 && turnMotorDirection != Constants.TURN_MOTOR_CLOCKWISE) { // Clockwise
+      turnMotorDirection = Constants.TURN_MOTOR_CLOCKWISE;
+      turnPid.setProportionalGain(turnPidConfig.proportionalGain * turnMotorDirection);
+    } else if (angleErrorAbs > 180.0 && turnMotorDirection != Constants.TURN_MOTOR_COUNTERCLOCKWISE) { // Counterclockwise
+      turnMotorDirection = Constants.TURN_MOTOR_COUNTERCLOCKWISE;
+      turnPid.setProportionalGain(turnPidConfig.proportionalGain * turnMotorDirection);
+    }
 
     // Turn.
     setTurnMotor(turnPid.runPID(desiredAngle, getAngle()));
