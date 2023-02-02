@@ -6,7 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSub;
+import utilities.SwerveModule;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.lang.Math;
 import frc.robot.Constants;
 
@@ -34,16 +37,33 @@ public class DriveCommand extends CommandBase {
 
   // its debugging time )---:
   private void test() {
+    SwerveModule testModule = m_driveTrainSub.getSwerveModuleFromId(0);
+    SmartDashboard.putNumber("Angle", testModule.getAngle());
 
+    double deg = (m_driveController.getRawAxis(3) + 1) * 0.5 * 360.0;
+    SmartDashboard.putNumber("joystick", deg);
+    testModule.setDesiredAngle(deg);
+    testModule.run();
+
+    testModule.setWheelMotor(0.15);
+    SmartDashboard.putNumber("Wheel speed", testModule.getSpeed());
+    SmartDashboard.putNumber("Wheel position", testModule.getDistance());
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_driveTrainSub.getSwerveModuleFromId(0).resetTurnEncoder();
+    m_driveTrainSub.getSwerveModuleFromId(0).resetWheelEncoder();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    test();
+    
+    /*
     // Get joystick axis.
     rightStickX = m_driveController.getRawAxis(Constants.RIGHT_STICK_X);
     rightStickY = m_driveController.getRawAxis(Constants.RIGHT_STICK_Y);
@@ -71,6 +91,7 @@ public class DriveCommand extends CommandBase {
 
     // Call run method to run PID loops and other stuff.
     m_driveTrainSub.run();
+    */
   }
 
   // Called once the command ends or is interrupted.

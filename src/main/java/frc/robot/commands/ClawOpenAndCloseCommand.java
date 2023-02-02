@@ -16,7 +16,7 @@ public class ClawOpenAndCloseCommand extends CommandBase {
   private Compressor phCompressor;
 
   public ClawOpenAndCloseCommand() {
-    phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+    //phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armAndClawSub);
   }
@@ -32,9 +32,11 @@ public class ClawOpenAndCloseCommand extends CommandBase {
     m_armAndClawSub.clawOpen();
     phCompressor.enableDigital();
 
+    /*
     boolean enabled = phCompressor.enabled();
     boolean pressureSwitch = phCompressor.getPressureSwitchValue();
     double current = phCompressor.getCurrent();
+    */
   }
 
   // Called once the command ends or is interrupted.

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package utilities;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -10,17 +10,18 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.RelativeEncoder;
 import frc.robot.Constants;
 import edu.wpi.first.math.MathUtil;
-import utilities.ConfigurablePID;
-import utilities.PIDConfiguration;
-import utilities.SwerveModuleConfig;
-import utilities.MathTools;
 
-public class SwerveModuleSub extends SubsystemBase {
+import com.revrobotics.CANSparkMaxLowLevel;
+
+public class SwerveModule {
   /** Creates a new SwerveModuleSub. */
   private SwerveModuleConfig configuration;
 
@@ -34,12 +35,14 @@ public class SwerveModuleSub extends SubsystemBase {
   private ConfigurablePID turnPid;
   private PIDConfiguration turnPidConfig;
   private double desiredAngle = 0.0;
-  private Spark turnMotor;
-  private Encoder turnEncoder;
+
+  private CANSparkMax turnMotor;
+  private RelativeEncoder turnEncoder;
+
   private int turnMotorDirection = Constants.TURN_MOTOR_CLOCKWISE;
   private double angleError = 0.0;
 
-  public SwerveModuleSub(SwerveModuleConfig config) {
+  public SwerveModule(SwerveModuleConfig config) {
     configuration = config;
 
     // Wheel motor.
@@ -50,23 +53,19 @@ public class SwerveModuleSub extends SubsystemBase {
     resetWheelEncoder();
 
     // Turn motor.
-    turnMotor = new Spark(config.turnMotorId);
+    turnMotor = new CANSparkMax(config.turnMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     turnMotor.setInverted(config.invertTurnMotor);
 
-    // Turn encoder.
-    turnEncoder = new Encoder(
-      new DigitalInput(config.turnEncoderChannelA),
-      new DigitalInput(config.turnEncoderChannelB),
-      !config.invertTurnMotor
-    );
-
-    turnEncoder.setDistancePerPulse(Constants.SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE);
+    // // Turn encoder.
+    turnEncoder = turnMotor.getEncoder();
+    turnEncoder.setPositionConversionFactor(Constants.SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE);
+    //turnEncoder.setInverted(!config.invertTurnMotor);
     resetTurnEncoder();
 
     // Wheel pid.
     wheelPid = new ConfigurablePID(Constants.SWERVE_MODULE_WHEEL_PID);
 
-    // Turn pid.
+    // // Turn pid.
     turnPid = new ConfigurablePID(Constants.SWERVE_MODULE_TURN_PID);
     turnPidConfig = Constants.SWERVE_MODULE_TURN_PID;
   }
@@ -93,11 +92,19 @@ public class SwerveModuleSub extends SubsystemBase {
   }
 
   public void resetTurnEncoder() {
-    turnEncoder.reset();
+    turnEncoder.setPosition(0.0);
   }
 
   public double getAngle() {
-    return MathUtil.inputModulus(turnEncoder.getDistance(), 0.0, 360.0);
+    return MathUtil.inputModulus(
+      getTurnEncoderPosition(),
+      0.0, 
+      360.0
+    );
+  }
+
+  public double getTurnEncoderPosition() {
+    return turnEncoder.getPosition() * (configuration.invertTurnMotor ? -1 : 1);
   }
 
   public void setDesiredAngle(double desiredAngle) {
@@ -105,11 +112,14 @@ public class SwerveModuleSub extends SubsystemBase {
   }
 
   public double getDistance() {
-    return (wheelMotorEncoderOffset - wheelMotor.getSelectedSensorPosition()) / Constants.SWERVE_MODULE_WHEEL_ENCODER_DISTANCE_PER_PULSE;
+    return (wheelMotor.getSelectedSensorPosition() 
+    / Constants.SWERVE_MODULE_WHEEL_ENCODER_DISTANCE_PER_PULSE
+    * (configuration.invertWheelMotor ? 1 : -1))
+    + wheelMotorEncoderOffset;
   }
 
   public void resetWheelEncoder() {
-    wheelMotorEncoderOffset = wheelMotor.getSelectedSensorPosition();
+    wheelMotorEncoderOffset = getDistance();
   }
 
   public double getSpeed() {
@@ -140,23 +150,7 @@ public class SwerveModuleSub extends SubsystemBase {
     // Wheel.
     //setWheelMotor(wheelPid.runPID(desiredSpeed, getSpeed()));
 
-    double angleErrorAbs = Math.abs(desiredAngle - getAngle());
-
-    // Set motor direction and proportional gain.
-    // Don't run code in if statement if already set to correct direction.
-    if (angleErrorAbs <= 180.0 && turnMotorDirection != Constants.TURN_MOTOR_CLOCKWISE) { // Clockwise
-      turnMotorDirection = Constants.TURN_MOTOR_CLOCKWISE;
-      turnPid.setProportionalGain(turnPidConfig.proportionalGain * turnMotorDirection);
-    } else if (angleErrorAbs > 180.0 && turnMotorDirection != Constants.TURN_MOTOR_COUNTERCLOCKWISE) { // Counterclockwise
-      turnMotorDirection = Constants.TURN_MOTOR_COUNTERCLOCKWISE;
-      turnPid.setProportionalGain(turnPidConfig.proportionalGain * turnMotorDirection);
-    }
-
     // Turn.
-    setTurnMotor(turnPid.runPID(desiredAngle, getAngle()));
-  }
-
-  @Override
-  public void periodic() {
+    setTurnMotor(turnPid.runPID(desiredAngle, getTurnEncoderPosition()));
   }
 }

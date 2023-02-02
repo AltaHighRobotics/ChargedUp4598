@@ -6,28 +6,35 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.SwerveModuleSub;
 import frc.robot.Constants;
 import utilities.SwerveModuleConfig;
+import utilities.SwerveModule;
+
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C.Port;
 import java.util.Vector;
 import java.lang.Math;
+import utilities.AS5600Encoder;
+import edu.wpi.first.wpilibj.I2C;
 
 // Usefull https://compendium.readthedocs.io/en/latest/tasks/drivetrains/swerve.html
 
 public class DriveTrainSub extends SubsystemBase {
   /** Creates a new DriveTrainSub. */
-  private SwerveModuleSub[] swerveModuleSubs = new SwerveModuleSub[Constants.SWERVE_MODULE_COUNT];
+  private SwerveModule[] swerveModuleSubs = new SwerveModule[Constants.SWERVE_MODULE_COUNT];
   private AHRS navx;
 
   public DriveTrainSub() {
     int i;
 
     // Config swerve modules.
+    /*
     for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
-      swerveModuleSubs[i] = new SwerveModuleSub(Constants.SWERVE_MODULE_CONFIGS[i]);
+      swerveModuleSubs[i] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[i]);
     }
+    */
+
+    swerveModuleSubs[0] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[0]);
 
     navx = new AHRS(Port.kOnboard);
     resetGyro();
@@ -91,11 +98,11 @@ public class DriveTrainSub extends SubsystemBase {
   }
 
   // Look in Constants.java for ids.
-  public SwerveModuleSub getSwerveModuleFromId(int id) {
+  public SwerveModule getSwerveModuleFromId(int id) {
     return swerveModuleSubs[id];
   }
 
-  public SwerveModuleSub[] getSwerveModuleSubs() {
+  public SwerveModule[] getSwerveModuleSubs() {
     return swerveModuleSubs;
   }
 
