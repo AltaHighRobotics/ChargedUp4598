@@ -50,10 +50,6 @@ public final class Constants {
     public static final int LEFT_STICK_Y = 1;
     public static final int LEFT_STICK_X = 0;
 
-    // Turn motor directions.
-    public static final int TURN_MOTOR_CLOCKWISE = 1;
-    public static final int TURN_MOTOR_COUNTERCLOCKWISE = -1;
-
     //Pistons.
     public static final int CLAW_PISTON_1 = 0;//Change later.
     public static final int CLAW_PISTON_2 = 0;//Change later.

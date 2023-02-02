@@ -25,7 +25,18 @@ public final class MathTools {
         double a, b;
         a = makeNonNegAngle(a1);
         b = makeNonNegAngle(a2);
-        
-        return 180.0 - Math.abs(Math.abs(a - b) - 180.0);
+
+        double dir = b - a;
+
+        if (Math.abs(dir) > 180.0) {
+            dir = -(Math.signum(dir) * 360.0) + dir;
+        }
+
+        return dir;
+    }
+
+    // Find angle set point while handling angle wrapping.
+    public static final double getAngleSetPoint(double desiredAngle, double currentAngle) {
+        return currentAngle + angleDis(currentAngle, desiredAngle);
     }
 }

@@ -39,7 +39,6 @@ public class SwerveModule {
   private CANSparkMax turnMotor;
   private RelativeEncoder turnEncoder;
 
-  private int turnMotorDirection = Constants.TURN_MOTOR_CLOCKWISE;
   private double angleError = 0.0;
 
   public SwerveModule(SwerveModuleConfig config) {
@@ -109,6 +108,7 @@ public class SwerveModule {
 
   public void setDesiredAngle(double desiredAngle) {
     this.desiredAngle = desiredAngle;
+    this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle, getAngle());
   }
 
   public double getDistance() {
