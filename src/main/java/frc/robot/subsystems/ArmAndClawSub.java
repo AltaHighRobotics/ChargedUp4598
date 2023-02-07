@@ -33,4 +33,24 @@ public class ArmAndClawSub extends SubsystemBase {
     clawPiston1.set(false);
     clawPiston2.set(false);
   }
+
+  public void armGrab() {
+
+  }
+
+  public void armLower() {
+
+  }
+
+  public void armMiddle() {
+
+  }
+
+  public void armHigher() {
+
+  }
+
+  public void armRest() {
+    
+  }
 }
