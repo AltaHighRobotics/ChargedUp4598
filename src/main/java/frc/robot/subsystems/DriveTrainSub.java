@@ -216,7 +216,7 @@ public class DriveTrainSub extends SubsystemBase {
       // Covert angle unit.
       moduleAngles[i] = MathTools.makeNonNegAngle(Math.toDegrees(moduleAngles[i]));
 
-      swerveModuleSubs[i].setDesiredSpeed(moduleSpeeds[i] * Constants.DRIVE_SPEED);
+      swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i] * Constants.DRIVE_SPEED);
       swerveModuleSubs[i].setDesiredAngle(moduleAngles[i]);
     }
   }

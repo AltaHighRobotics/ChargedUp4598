@@ -151,7 +151,7 @@ public class SwerveModule {
   
   public void run() {
     // Wheel.
-    setWheelMotor(wheelPid.runPID(desiredSpeed, getSpeed()));
+    //setWheelMotor(wheelPid.runPID(desiredSpeed, getSpeed()));
 
     // Turn.
     setTurnMotor(turnPid.runPID(desiredAngle, getTurnEncoderPosition()));

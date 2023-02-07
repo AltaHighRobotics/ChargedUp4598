@@ -16,7 +16,7 @@ import utilities.SwerveModuleConfig;
  */
 public final class Constants {
     // Speed.
-    public static final double DRIVE_SPEED = 2.5; //0.25
+    public static final double DRIVE_SPEED = 0.25; //0.25
     
     // Swerve module.
     public static final double SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE = 12.600000000000001; // 42 steps per rotation
@@ -26,7 +26,7 @@ public final class Constants {
 
     //public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.04, 0.0038, 0.004, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
     //public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.014, 0.0000002, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, -0.15, 0.15);
-    public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.05, 0.0038, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
+    public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.05, 0.0035, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
     public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.008, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
 
     public static final int FRONT_RIGHT_MODULE = 0;
