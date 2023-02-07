@@ -15,6 +15,9 @@ import utilities.SwerveModuleConfig;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // Speed.
+    public static final double DRIVE_SPEED = 2.5; //0.25
+    
     // Swerve module.
     public static final double SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE = 12.600000000000001; // 42 steps per rotation
     public static final double SWERVE_MODULE_WHEEL_CIRCUMFERENCE = 0.3092112569295754; // Meters
@@ -23,8 +26,8 @@ public final class Constants {
 
     //public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.04, 0.0038, 0.004, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
     //public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.014, 0.0000002, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, -0.15, 0.15);
-    public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.04, 0.01216, 0.0128, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
-    public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.005, 0.0000001, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.05, 0.0038, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
+    public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.008, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
 
     public static final int FRONT_RIGHT_MODULE = 0;
     public static final int FRONT_LEFT_MODULE = 1;
@@ -39,19 +42,24 @@ public final class Constants {
         new SwerveModuleConfig(7, 6, true, false) // Back left
     };
     
-    public static final double VEHICLE_WHEELBASE = 0.0;
-    public static final double VEHICLE_TRACKWIDTH = 0.0;
+    public static final double VEHICLE_WHEELBASE = 1.0;
+    public static final double VEHICLE_TRACKWIDTH = 1.0;
     public static final double VEHICLE_RADIUS = Math.hypot(VEHICLE_WHEELBASE, VEHICLE_TRACKWIDTH);
 
     // Controllers.
     public static final int DRIVE_CONTROLLER = 0;
-    public static final double DRIVE_CONTROLLER_RIGHT_DEAD_ZONE = 0.0;
-    public static final double DRIVE_CONTROLLER_LEFT_DEAD_ZONE = 0.0;
+    public static final double DRIVE_CONTROLLER_RIGHT_DEAD_ZONE = 0.05;
+    public static final double DRIVE_CONTROLLER_LEFT_DEAD_ZONE = 0.05;
 
     public static final int RIGHT_STICK_Y = 3;
     public static final int RIGHT_STICK_X = 4;
     public static final int LEFT_STICK_Y = 1;
     public static final int LEFT_STICK_X = 0;
+
+    public static final int XBOX_A_BUTTON = 1; 
+    public static final int XBOX_B_BUTTON = 2;
+    public static final int XBOX_X_BUTTON = 3;
+    public static final int XBOX_Y_BUTTON = 4;
 
     //Pistons.
     public static final int CLAW_PISTON_1 = 0;//Change later.

@@ -11,6 +11,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 
 /**
@@ -30,6 +31,7 @@ public class RobotContainer {
 
   // Commands
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveTrainSub, m_driveController);
+  private final ZeroAngleCommand m_zeroAngleCommand = new ZeroAngleCommand(m_driveTrainSub);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -44,7 +46,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    // Set buttons.
+    final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+
+    //zeroAngleButton.whenPressed(m_zeroAngleCommand);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

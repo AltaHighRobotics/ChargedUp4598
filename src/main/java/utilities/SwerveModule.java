@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import frc.robot.Constants;
 import edu.wpi.first.math.MathUtil;
 import utilities.MathTools;
@@ -46,6 +48,7 @@ public class SwerveModule {
 
     // Turn motor.
     turnMotor = new CANSparkMax(config.turnMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    turnMotor.setIdleMode(IdleMode.kCoast);
     turnMotor.setInverted(config.invertTurnMotor);
 
     // // Turn encoder.
@@ -94,6 +97,11 @@ public class SwerveModule {
     return turnEncoder.getPosition();
   }
 
+
+  public void setTurnEncoderPosition(double position) {
+    turnEncoder.setPosition(position);
+  }
+  
   public void setDesiredAngle(double desiredAngle) {
     this.desiredAngle = desiredAngle;
     this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle, getTurnEncoderPosition());

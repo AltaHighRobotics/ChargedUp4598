@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import java.util.Vector;
 import java.lang.Math;
 import utilities.AS5600Encoder;
+import utilities.MathTools;
 import edu.wpi.first.wpilibj.I2C;
 
 // Usefull https://compendium.readthedocs.io/en/latest/tasks/drivetrains/swerve.html
@@ -32,9 +33,7 @@ public class DriveTrainSub extends SubsystemBase {
       swerveModuleSubs[i] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[i]);
     }
 
-    //swerveModuleSubs[0] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[0]);
-
-    navx = new AHRS(Port.kOnboard);
+    navx = new AHRS(Port.kMXP);
     resetGyro();
   }
 
@@ -164,18 +163,36 @@ public class DriveTrainSub extends SubsystemBase {
       */
     }
 
-    //SmartDashboard.putNumber("Yaw", getYaw());
+    SmartDashboard.putNumber("Yaw", getYaw());
   }
 
   // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf
-  public void setSwerveDrive(double strafe, double speed, double rotation) {
+  public void setSwerveDrive(double strafe, double speed, double rotation, boolean fieldCentric) {
     int i;
+    double x, y, temp;
 
-    double a = strafe - rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
-    double b = strafe + rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
-    double c = speed - rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
-    double d = speed + rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+    x = strafe;
+    y = speed;
 
+    // Field centric.
+    double yaw, angleCos, angleSin;
+
+    if (fieldCentric) {
+      yaw = Math.toRadians(getYaw());
+      angleCos = Math.cos(yaw);
+      angleSin = Math.sin(yaw);
+
+      temp = y * angleCos + x * angleSin;
+      x = -y * angleSin + x * angleCos;
+      y = temp;
+    }
+  
+    double a = x - rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
+    double b = x + rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
+    double c = y - rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+    double d = y + rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+
+    // Calculate module speeds.
     double []moduleSpeeds = {
       Math.hypot(b, c),
       Math.hypot(b, d),
@@ -183,11 +200,12 @@ public class DriveTrainSub extends SubsystemBase {
       Math.hypot(a, d)
     };
 
+    // Calculate module angles.
     double []moduleAngles = {
-      Math.toDegrees(Math.atan2(b, c)),
-      Math.toDegrees(Math.atan2(b, d)),
-      Math.toDegrees(Math.atan2(a, c)),
-      Math.toDegrees(Math.atan2(a, d))
+      Math.atan2(b, c),
+      Math.atan2(b, d),
+      Math.atan2(a, c),
+      Math.atan2(a, d)
     };
 
     // Normalize speeds.
@@ -195,7 +213,10 @@ public class DriveTrainSub extends SubsystemBase {
 
     // Set speed and angle of each module.
     for (i = 0; i < moduleSpeeds.length; i++) {
-      swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i]);
+      // Covert angle unit.
+      moduleAngles[i] = MathTools.makeNonNegAngle(Math.toDegrees(moduleAngles[i]));
+
+      swerveModuleSubs[i].setDesiredSpeed(moduleSpeeds[i] * Constants.DRIVE_SPEED);
       swerveModuleSubs[i].setDesiredAngle(moduleAngles[i]);
     }
   }

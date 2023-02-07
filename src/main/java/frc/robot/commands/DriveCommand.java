@@ -43,19 +43,19 @@ public class DriveCommand extends CommandBase {
     SmartDashboard.putNumber("Angle", testModule.getAngle());
 
     double deg = MathTools.wrapAngle((m_driveController.getRawAxis(4) + 1) * 180);
-    double speed = Math.abs(m_driveController.getRawAxis(1) * 5.11480);
+    double speed = Math.abs(m_driveController.getRawAxis(1) * 0.4);
 
-    if (speed < 1) {
-      speed = 0.0;
-    }
+    //if (Math.abs(m_driveController.getRawAxis(1)) < 0.15) {
+    //  speed = 0.0;
+    //}
 
     SmartDashboard.putNumber("joystick", deg);
     SmartDashboard.putNumber("speed joystick", speed);
     SmartDashboard.putNumber("Error", testModule.getSpeedError());
 
-    testModule.setDesiredSpeed(speed);
+    //testModule.setDesiredSpeed(speed);
     testModule.setDesiredAngle(deg);
-    //testModule.setWheelMotor(1.0);
+    testModule.setWheelMotor(speed);
     testModule.run();
 
     SmartDashboard.putNumber("Wheel speed", testModule.getSpeed());
@@ -64,14 +64,14 @@ public class DriveCommand extends CommandBase {
 
   private void test2() {
     double deg = MathTools.wrapAngle((m_driveController.getRawAxis(4) + 1) * 180);
-    double speed = Math.abs(m_driveController.getRawAxis(1) * 0.511480);
+    double speed = Math.abs(m_driveController.getRawAxis(1) * 0.4);
 
     SmartDashboard.putNumber("joystick", deg);
     SmartDashboard.putNumber("speed joystick", speed);
 
     for (SwerveModule module : m_driveTrainSub.getSwerveModules()) {
       module.setDesiredAngle(deg);
-      module.setDesiredSpeed(speed);
+      module.setWheelMotor(speed);
     }
 
     m_driveTrainSub.run();
@@ -81,15 +81,21 @@ public class DriveCommand extends CommandBase {
   @Override
   public void initialize() {
     m_driveTrainSub.resetAllEncoders();
+    m_driveTrainSub.resetGyro();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    test2();
-    
     /*
+    test();
+
+    if (true) {
+      return;
+    }
+    */
+    
     // Get joystick axis.
     rightStickX = m_driveController.getRawAxis(Constants.RIGHT_STICK_X);
     rightStickY = m_driveController.getRawAxis(Constants.RIGHT_STICK_Y);
@@ -112,12 +118,17 @@ public class DriveCommand extends CommandBase {
     speed = leftStickY;
     rotation = rightStickX;
 
+    SmartDashboard.putNumber("desired speed", speed * Constants.DRIVE_SPEED);
+    SmartDashboard.putNumber(
+      "Module 0 speed", 
+      m_driveTrainSub.getSwerveModuleFromId(0).getSpeed()
+    );
+
     // Set swerve drive.
-    m_driveTrainSub.setSwerveDrive(strafe, -speed, rotation);
+    m_driveTrainSub.setSwerveDrive(strafe, -speed, rotation, true);
 
     // Call run method to run PID loops and other stuff.
     m_driveTrainSub.run();
-    */
   }
 
   // Called once the command ends or is interrupted.
