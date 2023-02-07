@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSub;
+import utilities.MathTools;
 import utilities.SwerveModule;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,31 +39,55 @@ public class DriveCommand extends CommandBase {
 
   // its debugging time )---:
   private void test() {
-    SwerveModule testModule = m_driveTrainSub.getSwerveModuleFromId(0);
+    SwerveModule testModule = m_driveTrainSub.getSwerveModuleFromId(2);
     SmartDashboard.putNumber("Angle", testModule.getAngle());
 
-    double deg = (m_driveController.getRawAxis(3) + 1) * 0.5 * 360.0;
+    double deg = MathTools.wrapAngle((m_driveController.getRawAxis(4) + 1) * 180);
+    double speed = Math.abs(m_driveController.getRawAxis(1) * 5.11480);
+
+    if (speed < 1) {
+      speed = 0.0;
+    }
+
     SmartDashboard.putNumber("joystick", deg);
+    SmartDashboard.putNumber("speed joystick", speed);
+    SmartDashboard.putNumber("Error", testModule.getSpeedError());
+
+    testModule.setDesiredSpeed(speed);
     testModule.setDesiredAngle(deg);
+    //testModule.setWheelMotor(1.0);
     testModule.run();
 
-    testModule.setWheelMotor(0.15);
     SmartDashboard.putNumber("Wheel speed", testModule.getSpeed());
     SmartDashboard.putNumber("Wheel position", testModule.getDistance());
+  }
+
+  private void test2() {
+    double deg = MathTools.wrapAngle((m_driveController.getRawAxis(4) + 1) * 180);
+    double speed = Math.abs(m_driveController.getRawAxis(1) * 0.511480);
+
+    SmartDashboard.putNumber("joystick", deg);
+    SmartDashboard.putNumber("speed joystick", speed);
+
+    for (SwerveModule module : m_driveTrainSub.getSwerveModules()) {
+      module.setDesiredAngle(deg);
+      module.setDesiredSpeed(speed);
+    }
+
+    m_driveTrainSub.run();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_driveTrainSub.getSwerveModuleFromId(0).resetTurnEncoder();
-    m_driveTrainSub.getSwerveModuleFromId(0).resetWheelEncoder();
+    m_driveTrainSub.resetAllEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    test();
+    test2();
     
     /*
     // Get joystick axis.
@@ -87,7 +113,7 @@ public class DriveCommand extends CommandBase {
     rotation = rightStickX;
 
     // Set swerve drive.
-    m_driveTrainSub.setSwerveDrive(strafe, speed, rotation);
+    m_driveTrainSub.setSwerveDrive(strafe, -speed, rotation);
 
     // Call run method to run PID loops and other stuff.
     m_driveTrainSub.run();

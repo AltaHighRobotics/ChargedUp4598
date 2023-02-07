@@ -28,13 +28,11 @@ public class DriveTrainSub extends SubsystemBase {
     int i;
 
     // Config swerve modules.
-    /*
     for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
       swerveModuleSubs[i] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[i]);
     }
-    */
 
-    swerveModuleSubs[0] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[0]);
+    //swerveModuleSubs[0] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[0]);
 
     navx = new AHRS(Port.kOnboard);
     resetGyro();
@@ -43,6 +41,23 @@ public class DriveTrainSub extends SubsystemBase {
   public void resetGyro() {
     navx.reset();
     navx.zeroYaw();
+  }
+
+  public void resetWheelEncoders() {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      swerveModuleSubs[i].resetWheelEncoder();
+    }
+  }
+
+  public void resetTurnEncoders() {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      swerveModuleSubs[i].resetTurnEncoder();
+    }
+  }
+
+  public void resetAllEncoders() {
+    resetWheelEncoders();
+    resetTurnEncoders();
   }
 
   public double getPitch() {
@@ -102,7 +117,7 @@ public class DriveTrainSub extends SubsystemBase {
     return swerveModuleSubs[id];
   }
 
-  public SwerveModule[] getSwerveModuleSubs() {
+  public SwerveModule[] getSwerveModules() {
     return swerveModuleSubs;
   }
 
@@ -141,13 +156,15 @@ public class DriveTrainSub extends SubsystemBase {
       swerveModuleSubs[i].run();
 
       // Print debug info.
+      /*
       SmartDashboard.putString(
         String.format("Swerve Module %d info", i),
         String.format("Speed: %lf, Angle: %lf", swerveModuleSubs[i].getSpeed(), swerveModuleSubs[i].getAngle())
       );
+      */
     }
 
-    SmartDashboard.putNumber("Yaw", getYaw());
+    //SmartDashboard.putNumber("Yaw", getYaw());
   }
 
   // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf
