@@ -64,4 +64,8 @@ public final class Constants {
     //Pistons.
     public static final int CLAW_PISTON_1 = 0;//Change later.
     public static final int CLAW_PISTON_2 = 0;//Change later.
+    
+    //Arm motors.
+    public static final int SMALL_ARM_MOTOR = 0;//Change later.
+    public static final int BIG_ARM_MOTOR = 0;//Change later.
 }
