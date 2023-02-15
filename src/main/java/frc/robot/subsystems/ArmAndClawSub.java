@@ -8,7 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import utilities.ConfigurablePID;
 import frc.robot.Constants;
 
 public class ArmAndClawSub extends SubsystemBase {
@@ -17,19 +20,68 @@ public class ArmAndClawSub extends SubsystemBase {
   private Solenoid clawPiston2;
 
   private WPI_VictorSPX smallArmMotor;
-  private WPI_VictorSPX bigArmMotor;
+  private WPI_TalonFX bigArmMotor;
+
+  private ConfigurablePID smallArmPid;
+  private ConfigurablePID bigArmPid;
+
+  private double smallArmSetPoint = 0.0;
+  private double bigArmSetPoint = 0.0;
 
   public ArmAndClawSub() {
+    //Solenoids.
     clawPiston1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_1);
     clawPiston2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_2);
 
+    //Motors.
     smallArmMotor = new WPI_VictorSPX(Constants.SMALL_ARM_MOTOR);
-    bigArmMotor = new WPI_VictorSPX(Constants.BIG_ARM_MOTOR);
+    smallArmMotor.configFactoryDefault();
+
+    bigArmMotor = new WPI_TalonFX(Constants.BIG_ARM_MOTOR);
+    bigArmMotor.configFactoryDefault();
+
+    // PID PID PID
+    smallArmPid = new ConfigurablePID(Constants.SMALL_ARM_PID);
+    bigArmPid = new ConfigurablePID(Constants.BIG_ARM_PID);
+  }
+
+  public void stopMotors() {
+    smallArmMotor.neutralOutput();
+    bigArmMotor.neutralOutput();
+  }
+
+  public void setSmallArmMotor(double power) {
+    smallArmMotor.set(VictorSPXControlMode.PercentOutput, power);
+  }
+
+  public void setBigArmMotor(double power) {
+    bigArmMotor.set(TalonFXControlMode.PercentOutput, power);
+  }
+
+  public void setSmallArmSetPoint(double setpoint) {
+    smallArmSetPoint = setpoint;
+  }
+
+  public void setBigArmSetPoint(double setpoint) {
+    bigArmSetPoint = setpoint;
+  }
+
+  public double getSmallArmPosition() {
+    return 0.0;
+  }
+
+  public double getBigArmPosition() {
+    return bigArmMotor.getSelectedSensorPosition() * Constants.BIG_ARM_ENCODER_DISTANCE_PER_PULSE;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    run();
+  }
+
+  public void run() {
+    setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+    setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
   }
 
   public void clawOpen() {
@@ -43,22 +95,27 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void armGrab() {
-
+    setBigArmSetPoint(0.0);
+    setSmallArmSetPoint(0.0);
   }
 
   public void armLower() {
-
+    setBigArmSetPoint(0.0);
+    setSmallArmSetPoint(0.0);
   }
 
   public void armMiddle() {
-
+    setBigArmSetPoint(0.0);
+    setSmallArmSetPoint(0.0);
   }
 
   public void armHigher() {
-
+    setBigArmSetPoint(0.0);
+    setSmallArmSetPoint(0.0);
   }
 
   public void armRest() {
-    
+    setBigArmSetPoint(0.0);
+    setSmallArmSetPoint(0.0);
   }
 }
