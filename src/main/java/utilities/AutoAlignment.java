@@ -39,6 +39,8 @@ public class AutoAlignment {
         return atPosition;
     }
 
+    // Runs alignment pids and drivetrain.
+    // Returns true if at position.
     public boolean run() {
         // Get x and y.
         double x = m_vision.getAprilTagHorizontalOffset();
