@@ -33,6 +33,9 @@ public class DriveCommand extends CommandBase {
     m_driveTrainSub = driveTrainSub;
     m_driveController = driveController;
 
+    m_driveTrainSub.resetAllEncoders();
+    m_driveTrainSub.resetGyro();
+
     addRequirements(m_driveTrainSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -80,8 +83,6 @@ public class DriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_driveTrainSub.resetAllEncoders();
-    m_driveTrainSub.resetGyro();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

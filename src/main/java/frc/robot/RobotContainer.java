@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
+import frc.robot.commands.ArmPositions.*;
 import frc.robot.subsystems.*;
 import frc.robot.autonomous.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,19 +30,28 @@ public class RobotContainer {
 
   // Subsystems
   private final DriveTrainSub m_driveTrainSub = new DriveTrainSub();
+  private final ArmAndClawSub m_armAndClawSub = new ArmAndClawSub();
 
   // Commands
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveTrainSub, m_driveController);
   private final ZeroAngleCommand m_zeroAngleCommand = new ZeroAngleCommand(m_driveTrainSub);
+  private final TestArmCommad m_testArmCommand = new TestArmCommad(m_armAndClawSub);
+  private final OpenClawCommand m_openClawCommand = new OpenClawCommand(m_armAndClawSub);
+  private final CloseClawCommand m_CloseClawCommand = new CloseClawCommand(m_armAndClawSub);
+  private final ClawOpenAndCloseCommand m_clawOpenAndCloseCommand = new ClawOpenAndCloseCommand(m_armAndClawSub);
 
   // Autonomous.
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
+
+  // Arm positions.
+  //private final ArmMiddlePositionCommand
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
     CommandScheduler.getInstance().setDefaultCommand(m_driveTrainSub, m_driveCommand);
+    //CommandScheduler.getInstance().setDefaultCommand(m_armAndClawSub, m_testArmCommand);
   }
 
   /**
@@ -52,9 +62,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Set buttons.
-    final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    //final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    final JoystickButton openAndCloseClawButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
 
     //zeroAngleButton.whenPressed(m_zeroAngleCommand);
+    openAndCloseClawButton.toggleWhenPressed(m_clawOpenAndCloseCommand);
   }
 
   /**

@@ -5,20 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.subsystems.ArmAndClawSub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Compressor;
 
-public class ClawOpenAndCloseCommand extends CommandBase {
-  /** Creates a new ClawOpenAndCloseCommand. */
+public class CloseClawCommand extends CommandBase {
+  /** Creates a new CloseClawCommand. */
   private ArmAndClawSub m_armAndClawSub;
 
-  public ClawOpenAndCloseCommand(ArmAndClawSub armAndClawSub) {
+  public CloseClawCommand(ArmAndClawSub armAndClawSub) {
     m_armAndClawSub = armAndClawSub;
-    //phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-    // Use addRequirements() here to declare subsystem dependencies.
+
     addRequirements(m_armAndClawSub);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -28,21 +25,12 @@ public class ClawOpenAndCloseCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    m_armAndClawSub.clawOpen();
-
-    /*
-    boolean enabled = phCompressor.enabled();
-    boolean pressureSwitch = phCompressor.getPressureSwitchValue();
-    double current = phCompressor.getCurrent();
-    */
+    m_armAndClawSub.clawClose();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_armAndClawSub.clawClose();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

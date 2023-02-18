@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import utilities.ConfigurablePID;
@@ -26,10 +28,13 @@ public class ArmAndClawSub extends SubsystemBase {
   private double smallArmSetPoint = 0.0;
   private double bigArmSetPoint = 0.0;
 
+  private double smallArmEncoderOffset = 0.0;
+  private double bigArmEncoderOffset = 0.0;
+
   public ArmAndClawSub() {
     //Solenoids.
     clawPiston1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_1);
-    clawPiston2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_2);
+    //clawPiston2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_2);
 
     //Motors.
     smallArmMotor = new WPI_TalonFX(Constants.SMALL_ARM_MOTOR);
@@ -65,16 +70,26 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public double getSmallArmPosition() {
-    return smallArmMotor.getSelectedSensorPosition() * Constants.SMALL_ARM_ENCODER_DISTANCE_PER_PULSE;
+    return smallArmMotor.getSelectedSensorPosition() * Constants.SMALL_ARM_ENCODER_DISTANCE_PER_PULSE - smallArmEncoderOffset;
   }
 
   public double getBigArmPosition() {
-    return bigArmMotor.getSelectedSensorPosition() * Constants.BIG_ARM_ENCODER_DISTANCE_PER_PULSE;
+    return bigArmMotor.getSelectedSensorPosition() * Constants.BIG_ARM_ENCODER_DISTANCE_PER_PULSE - bigArmEncoderOffset;
+  }
+
+  public void resetSmallArmEncoder() {
+    smallArmEncoderOffset += getSmallArmPosition();
+  }
+
+  public void resetBigArmEncoder() {
+    bigArmEncoderOffset += getBigArmPosition();
   }
 
   @Override
   public void periodic() {
-    run();
+    //run();
+    SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
+    SmartDashboard.putNumber("Big arm position", getBigArmPosition());
   }
 
   public void run() {
@@ -84,12 +99,12 @@ public class ArmAndClawSub extends SubsystemBase {
 
   public void clawOpen() {
     clawPiston1.set(true);
-    clawPiston2.set(true);
+    //clawPiston2.set(true);
   }
 
   public void clawClose() {
     clawPiston1.set(false);
-    clawPiston2.set(false);
+    //clawPiston2.set(false);
   }
 
   public void armGrab() {

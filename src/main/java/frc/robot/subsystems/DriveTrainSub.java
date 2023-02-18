@@ -192,7 +192,7 @@ public class DriveTrainSub extends SubsystemBase {
     double yaw, angleCos, angleSin;
 
     if (fieldCentric) {
-      yaw = Math.toRadians(getYaw());
+      yaw = Math.toRadians(getHeading());
       angleCos = Math.cos(yaw);
       angleSin = Math.sin(yaw);
 
