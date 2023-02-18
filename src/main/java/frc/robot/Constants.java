@@ -68,7 +68,8 @@ public final class Constants {
     //Arm motors.
     public static final int SMALL_ARM_MOTOR = 0;//Change later.
     public static final int BIG_ARM_MOTOR = 0;//Change later.
-    public static final double BIG_ARM_ENCODER_DISTANCE_PER_PULSE = 0.0;
+    public static final double BIG_ARM_ENCODER_DISTANCE_PER_PULSE = 0.0;//Change later.
+    public static final double SMALL_ARM_ENCODER_DISTANCE_PER_PULSE = 0.0;//Change later.
 
     public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);

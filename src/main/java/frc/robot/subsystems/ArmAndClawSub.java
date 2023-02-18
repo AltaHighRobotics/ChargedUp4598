@@ -7,10 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import utilities.ConfigurablePID;
 import frc.robot.Constants;
 
@@ -19,7 +17,7 @@ public class ArmAndClawSub extends SubsystemBase {
   private Solenoid clawPiston1;
   private Solenoid clawPiston2;
 
-  private WPI_VictorSPX smallArmMotor;
+  private WPI_TalonFX smallArmMotor;
   private WPI_TalonFX bigArmMotor;
 
   private ConfigurablePID smallArmPid;
@@ -34,7 +32,7 @@ public class ArmAndClawSub extends SubsystemBase {
     clawPiston2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_2);
 
     //Motors.
-    smallArmMotor = new WPI_VictorSPX(Constants.SMALL_ARM_MOTOR);
+    smallArmMotor = new WPI_TalonFX(Constants.SMALL_ARM_MOTOR);
     smallArmMotor.configFactoryDefault();
 
     bigArmMotor = new WPI_TalonFX(Constants.BIG_ARM_MOTOR);
@@ -51,7 +49,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void setSmallArmMotor(double power) {
-    smallArmMotor.set(VictorSPXControlMode.PercentOutput, power);
+    smallArmMotor.set(TalonFXControlMode.PercentOutput, power);
   }
 
   public void setBigArmMotor(double power) {
@@ -67,7 +65,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public double getSmallArmPosition() {
-    return 0.0;
+    return smallArmMotor.getSelectedSensorPosition() * Constants.SMALL_ARM_ENCODER_DISTANCE_PER_PULSE;
   }
 
   public double getBigArmPosition() {
