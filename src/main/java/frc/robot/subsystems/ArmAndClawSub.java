@@ -116,4 +116,20 @@ public class ArmAndClawSub extends SubsystemBase {
     setBigArmSetPoint(0.0);
     setSmallArmSetPoint(0.0);
   }
+
+  public double getBigArmError() {
+    return bigArmPid.getError();
+  }
+
+  public double getSmallArmError() {
+    return smallArmPid.getError();
+  }
+
+  public double getBigArmErrorAbs() {
+    return Math.abs(bigArmPid.getError());
+  }
+
+  public double getSmallArmErrorAbs() {
+    return Math.abs(smallArmPid.getError());
+  }
 }

@@ -54,6 +54,16 @@ public class DriveTrainSub extends SubsystemBase {
     }
   }
 
+  public double getAvgWheelEncoder() {
+    double avg = 0.0;
+
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      avg += swerveModuleSubs[i].getDistance();
+    }
+
+    return avg / 4;
+  }
+
   public void resetAllEncoders() {
     resetWheelEncoders();
     resetTurnEncoders();
@@ -69,6 +79,10 @@ public class DriveTrainSub extends SubsystemBase {
 
   public double getYaw() {
     return navx.getYaw();
+  }
+
+  public double getHeading() {
+    return navx.getCompassHeading();
   }
 
   public void stopTurn() {

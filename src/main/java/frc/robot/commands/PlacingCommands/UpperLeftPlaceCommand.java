@@ -7,6 +7,7 @@ import frc.robot.subsystems.DriveTrainSub;
 import frc.robot.subsystems.ArmAndClawSub;
 import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import utilities.ConfigurablePID;
 import utilities.AutoAlignment;
 import frc.robot.Constants;
@@ -25,6 +26,13 @@ public class UpperLeftPlaceCommand extends CommandBase {
 
   private AutoAlignment autoAlignment;
 
+  private long waitTime;
+  private long startTime;
+  private boolean armIsUp;
+  private boolean clawIsOpen;
+
+  private int stage;
+
   public UpperLeftPlaceCommand(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
     m_driveTrainSub = driveTrainSub;
     m_armAndClawSub = armAndClawSub;
@@ -41,20 +49,63 @@ public class UpperLeftPlaceCommand extends CommandBase {
   public void initialize() {
     shouldEnd = !m_vision.isTrackedAprilTagFound();
     autoAlignment.reset();
+    armIsUp = false;
+    clawIsOpen = false;
+
+    stage = 0;
+
+    startTime = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // 20.5 deg vertical field of view.
+    // FIX MAGIC NUMBERS
+    switch (stage) {
+      case 0: // Align robot with target.
+        atPosition = autoAlignment.run();
 
-    atPosition = autoAlignment.run();
+        if (atPosition) {
+          stage = 1;
+        }
+
+        break;
+      case 1: // Raise arm to position.
+        m_armAndClawSub.armHigher();
+
+        if (m_armAndClawSub.getBigArmErrorAbs() <= Constants.BIG_ARM_THRESHOLD && m_armAndClawSub.getSmallArmErrorAbs() <= Constants.SMALL_ARM_THRESHOLD) {
+          stage = 2;
+        }
+
+        break;
+      case 2: // Open claw and wait for it.
+        m_armAndClawSub.clawOpen();
+
+        // Get start time.
+        if (startTime == 0) {
+          startTime = System.currentTimeMillis();
+        }
+
+        // Next stage.
+        if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
+          stage = 3;
+        }
+
+        break;
+      default:
+        shouldEnd = true;
+        break;
+    }
+
+    SmartDashboard.putNumber("Stage", stage);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_driveTrainSub.stop();
+    m_armAndClawSub.armRest();
   }
 
   // Returns true when the command should end.

@@ -79,4 +79,14 @@ public final class Constants {
     public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
 
     public static final double LIMELIGHT_VERTICAL_SETPOINT = 0.0;
+
+    // Autonomous.
+    public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final double BALANCE_AUTO_DISTANCE = 0.0;
+
+    //Placing Command
+    public static final double BIG_ARM_THRESHOLD = 0;
+    public static final double SMALL_ARM_THRESHOLD = 0;
+    public static final long WAIT_TIME = 0;
 }
