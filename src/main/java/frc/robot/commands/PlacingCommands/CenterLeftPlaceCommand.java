@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.PlacingCommands;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSub;
 import frc.robot.subsystems.ArmAndClawSub;
 import frc.robot.subsystems.Vision;
@@ -12,9 +14,7 @@ import utilities.ConfigurablePID;
 import utilities.AutoAlignment;
 import frc.robot.Constants;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
-public class UpperLeftPlaceCommand extends CommandBase {
+public class CenterLeftPlaceCommand extends CommandBase {
   /** Creates a new UpperLeftPlaceCommand. */
 
   private DriveTrainSub m_driveTrainSub;
@@ -30,7 +30,7 @@ public class UpperLeftPlaceCommand extends CommandBase {
 
   private int stage;
 
-  public UpperLeftPlaceCommand(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
+  public CenterLeftPlaceCommand(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
     m_driveTrainSub = driveTrainSub;
     m_armAndClawSub = armAndClawSub;
     m_vision = vision;
@@ -66,7 +66,7 @@ public class UpperLeftPlaceCommand extends CommandBase {
 
         break;
       case 1: // Raise arm to position.
-        m_armAndClawSub.armHigher();
+        m_armAndClawSub.armMiddle();
 
         if (m_armAndClawSub.getBigArmErrorAbs() <= Constants.BIG_ARM_THRESHOLD && m_armAndClawSub.getSmallArmErrorAbs() <= Constants.SMALL_ARM_THRESHOLD) {
           stage = 2;

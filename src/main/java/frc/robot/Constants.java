@@ -36,10 +36,10 @@ public final class Constants {
     public static final int SWERVE_MODULE_COUNT = 4;
 
     public static final SwerveModuleConfig []SWERVE_MODULE_CONFIGS = {
-        new SwerveModuleConfig(20, 9, false, false), // Front right
-        new SwerveModuleConfig(1, 3, true, false), // Front left
-        new SwerveModuleConfig(5, 8, false, false), // Back right
-        new SwerveModuleConfig(7, 6, true, false) // Back left
+        new SwerveModuleConfig(20, 9, true, true), // Front right
+        new SwerveModuleConfig(1, 3, false, true), // Front left
+        new SwerveModuleConfig(5, 8, true, true), // Back right
+        new SwerveModuleConfig(7, 6, false, true) // Back left
     };
     
     public static final double VEHICLE_WHEELBASE = 1.0;
@@ -70,9 +70,11 @@ public final class Constants {
     public static final int BIG_ARM_MOTOR = 14;//Change later.
     public static final double BIG_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
     public static final double SMALL_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
+    public static final double BIG_ARM_CURRENT_LIMIT = 10.0;
+    public static final double SMALL_ARM_CURRENT_LIMIT = 10.0;
 
     public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
-    public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0003, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
 
     // Limelight.
     public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
@@ -89,4 +91,13 @@ public final class Constants {
     public static final double BIG_ARM_THRESHOLD = 0;
     public static final double SMALL_ARM_THRESHOLD = 0;
     public static final long WAIT_TIME = 0;
+
+    public static final double LEFT_VERTICAL_SETPOINT = 0;
+    public static final double LEFT_HORIZONTAL_SETPOINT = 0;
+
+    public static final double MIDDLE_VERTICAL_SETPOINT = 0;
+    public static final double MIDDLE_HORIZONTAL_SETPOINT = 0;
+
+    public static final double RIGHT_VERTICAL_SETPOINT = 0;
+    public static final double RIGHT_HORIZONTAL_SETPOINT = 0;
 }

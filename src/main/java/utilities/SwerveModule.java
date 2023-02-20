@@ -65,7 +65,7 @@ public class SwerveModule {
   }
 
   public void setWheelMotor(double speed) {
-    wheelMotor.set(TalonFXControlMode.PercentOutput, speed);
+    //wheelMotor.set(TalonFXControlMode.PercentOutput, speed);
   }
 
   public void stopWheelMotor() {
@@ -74,7 +74,7 @@ public class SwerveModule {
   }
 
   public void setTurnMotor(double speed) {
-    turnMotor.set(speed);
+    //turnMotor.set(speed);
   }
 
   public void stopTurnMotor() {

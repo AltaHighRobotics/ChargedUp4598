@@ -39,6 +39,7 @@ public class RobotContainer {
   private final OpenClawCommand m_openClawCommand = new OpenClawCommand(m_armAndClawSub);
   private final CloseClawCommand m_CloseClawCommand = new CloseClawCommand(m_armAndClawSub);
   private final ClawOpenAndCloseCommand m_clawOpenAndCloseCommand = new ClawOpenAndCloseCommand(m_armAndClawSub);
+  private final ArmMiddlePositionCommand m_armMiddlePositionCommand = new ArmMiddlePositionCommand(m_armAndClawSub);
 
   // Autonomous.
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
@@ -64,9 +65,11 @@ public class RobotContainer {
     // Set buttons.
     //final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
     final JoystickButton openAndCloseClawButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    final JoystickButton armMiddleButton = new JoystickButton(m_driveController, Constants.XBOX_B_BUTTON);
 
     //zeroAngleButton.whenPressed(m_zeroAngleCommand);
-    openAndCloseClawButton.toggleWhenPressed(m_clawOpenAndCloseCommand);
+    openAndCloseClawButton.toggleOnTrue(m_clawOpenAndCloseCommand);
+    armMiddleButton.toggleOnTrue(m_armMiddlePositionCommand);
   }
 
   /**

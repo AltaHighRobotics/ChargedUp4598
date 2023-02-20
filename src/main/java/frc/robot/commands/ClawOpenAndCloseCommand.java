@@ -13,10 +13,11 @@ import edu.wpi.first.wpilibj.Compressor;
 public class ClawOpenAndCloseCommand extends CommandBase {
   /** Creates a new ClawOpenAndCloseCommand. */
   private ArmAndClawSub m_armAndClawSub;
+  private Compressor phCompressor;
 
   public ClawOpenAndCloseCommand(ArmAndClawSub armAndClawSub) {
     m_armAndClawSub = armAndClawSub;
-    //phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+    //phCompressor = new Compressor(Constants.CLAW_PISTON_1, PneumaticsModuleType.REVPH);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armAndClawSub);
   }

@@ -11,14 +11,18 @@ import frc.robot.Constants;
 public class ArmMiddlePositionCommand extends CommandBase {
   /** Creates a new ArmMiddlePositionCommand. */
   private ArmAndClawSub m_armAndClawSub;
-  public ArmMiddlePositionCommand() {
+
+  public ArmMiddlePositionCommand(ArmAndClawSub armAndClawSub) {
+    m_armAndClawSub = armAndClawSub;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armAndClawSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -29,6 +33,7 @@ public class ArmMiddlePositionCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_armAndClawSub.setBigArmSetPoint(0);
     m_armAndClawSub.stopMotors();
   }
 

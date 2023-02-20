@@ -10,7 +10,10 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenixpro.configs.TalonFXConfiguration;
 import utilities.ConfigurablePID;
 import frc.robot.Constants;
 
@@ -20,7 +23,10 @@ public class ArmAndClawSub extends SubsystemBase {
   private Solenoid clawPiston2;
 
   private WPI_TalonFX smallArmMotor;
+  private StatorCurrentLimitConfiguration smallArmMotorCurrentLimit;
+
   private WPI_TalonFX bigArmMotor;
+  private StatorCurrentLimitConfiguration bigArmMotorCurrentLimit;
 
   private ConfigurablePID smallArmPid;
   private ConfigurablePID bigArmPid;
@@ -32,20 +38,37 @@ public class ArmAndClawSub extends SubsystemBase {
   private double bigArmEncoderOffset = 0.0;
 
   public ArmAndClawSub() {
-    //Solenoids.
+    // Solenoids.
     clawPiston1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_1);
     //clawPiston2 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_2);
 
-    //Motors.
+    // Motors.
     smallArmMotor = new WPI_TalonFX(Constants.SMALL_ARM_MOTOR);
     smallArmMotor.configFactoryDefault();
 
     bigArmMotor = new WPI_TalonFX(Constants.BIG_ARM_MOTOR);
     bigArmMotor.configFactoryDefault();
 
+    // Config big arm motor.
+    bigArmMotorCurrentLimit = new StatorCurrentLimitConfiguration(true, Constants.BIG_ARM_CURRENT_LIMIT, 0.0, 0.0);
+
+    bigArmMotor.configStatorCurrentLimit(bigArmMotorCurrentLimit);
+    bigArmMotor.setNeutralMode(NeutralMode.Brake);
+
+    // Config small arm motor.
+    smallArmMotorCurrentLimit = new StatorCurrentLimitConfiguration(true, Constants.SMALL_ARM_CURRENT_LIMIT, 0.0, 0.0);
+
+    smallArmMotor.configStatorCurrentLimit(smallArmMotorCurrentLimit);
+    smallArmMotor.setNeutralMode(NeutralMode.Brake);
+
+    // build team issue!!!
+
     // PID PID PID
     smallArmPid = new ConfigurablePID(Constants.SMALL_ARM_PID);
     bigArmPid = new ConfigurablePID(Constants.BIG_ARM_PID);
+
+    resetBigArmEncoder();
+    resetSmallArmEncoder();
   }
 
   public void stopMotors() {
@@ -87,23 +110,30 @@ public class ArmAndClawSub extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //run();
+    run();
     SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
     SmartDashboard.putNumber("Big arm position", getBigArmPosition());
   }
 
   public void run() {
-    setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
-    setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+    //setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+
+    if (bigArmSetPoint != 0) {
+      //setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+    }
+
+    SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
   }
 
   public void clawOpen() {
     clawPiston1.set(true);
+    SmartDashboard.putBoolean("Claw open", true);
     //clawPiston2.set(true);
   }
 
   public void clawClose() {
     clawPiston1.set(false);
+    SmartDashboard.putBoolean("Claw open", false);
     //clawPiston2.set(false);
   }
 
@@ -118,7 +148,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void armMiddle() {
-    setBigArmSetPoint(0.0);
+    setBigArmSetPoint(10);
     setSmallArmSetPoint(0.0);
   }
 
