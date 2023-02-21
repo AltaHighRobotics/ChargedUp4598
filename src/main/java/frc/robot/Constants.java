@@ -17,6 +17,7 @@ import utilities.SwerveModuleConfig;
 public final class Constants {
     // Speed.
     public static final double DRIVE_SPEED = 0.25; //0.25
+    public static final double SMALL_ARM_LOWER_SPEED = -0.15;
     
     // Swerve module.
     public static final double SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE = 12.600000000000001; // 42 steps per rotation
@@ -36,10 +37,10 @@ public final class Constants {
     public static final int SWERVE_MODULE_COUNT = 4;
 
     public static final SwerveModuleConfig []SWERVE_MODULE_CONFIGS = {
-        new SwerveModuleConfig(20, 9, true, true), // Front right
-        new SwerveModuleConfig(1, 3, false, true), // Front left
-        new SwerveModuleConfig(5, 8, true, true), // Back right
-        new SwerveModuleConfig(7, 6, false, true) // Back left
+        new SwerveModuleConfig(20, 9, true, false), // Front right
+        new SwerveModuleConfig(1, 3, false, false), // Front left
+        new SwerveModuleConfig(5, 8, true, false), // Back right
+        new SwerveModuleConfig(7, 6, false, false) // Back left
     };
     
     public static final double VEHICLE_WHEELBASE = 1.0;
@@ -65,16 +66,17 @@ public final class Constants {
     public static final int CLAW_PISTON_1 = 0;//Change later.
     public static final int CLAW_PISTON_2 = 0;//Change later.
     
-    //Arm motors.
+    // Arm.
     public static final int SMALL_ARM_MOTOR = 11;//Change later.
     public static final int BIG_ARM_MOTOR = 14;//Change later.
     public static final double BIG_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
     public static final double SMALL_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
-    public static final double BIG_ARM_CURRENT_LIMIT = 10.0;
+    public static final double BIG_ARM_CURRENT_LIMIT = 20.0;
     public static final double SMALL_ARM_CURRENT_LIMIT = 10.0;
+    public static final int ARM_LIMIT_SWITCH = 0;
 
-    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
-    public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0003, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00002, 0.0, 0.0, 0.0, 2000.0, 0, 0, 0, 0, 0, 0, -0.5, 0.7);
+    public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
 
     // Limelight.
     public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);

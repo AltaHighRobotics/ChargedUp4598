@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenixpro.configs.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.DigitalInput;
 import utilities.ConfigurablePID;
 import frc.robot.Constants;
 
@@ -33,6 +34,8 @@ public class ArmAndClawSub extends SubsystemBase {
 
   private double smallArmSetPoint = 0.0;
   private double bigArmSetPoint = 0.0;
+
+  private DigitalInput armLimitSwitch;
 
   private double smallArmEncoderOffset = 0.0;
   private double bigArmEncoderOffset = 0.0;
@@ -60,8 +63,12 @@ public class ArmAndClawSub extends SubsystemBase {
 
     smallArmMotor.configStatorCurrentLimit(smallArmMotorCurrentLimit);
     smallArmMotor.setNeutralMode(NeutralMode.Brake);
+    smallArmMotor.setInverted(TalonFXInvertType.Clockwise);
 
     // build team issue!!!
+
+    // Limit swich
+    armLimitSwitch = new DigitalInput(Constants.ARM_LIMIT_SWITCH);
 
     // PID PID PID
     smallArmPid = new ConfigurablePID(Constants.SMALL_ARM_PID);
@@ -69,6 +76,10 @@ public class ArmAndClawSub extends SubsystemBase {
 
     resetBigArmEncoder();
     resetSmallArmEncoder();
+  }
+
+  public boolean getLimitSwitchValue() {
+    return armLimitSwitch.get();
   }
 
   public void stopMotors() {
@@ -116,13 +127,11 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void run() {
-    //setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
-
-    if (bigArmSetPoint != 0) {
-      //setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
-    }
+    setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+    //setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
 
     SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
+    SmartDashboard.putBoolean("Limit switch", getLimitSwitchValue());
   }
 
   public void clawOpen() {
@@ -148,8 +157,8 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void armMiddle() {
-    setBigArmSetPoint(10);
-    setSmallArmSetPoint(0.0);
+    setBigArmSetPoint(12811.0);
+    setSmallArmSetPoint(350000.0);
   }
 
   public void armHigher() {
