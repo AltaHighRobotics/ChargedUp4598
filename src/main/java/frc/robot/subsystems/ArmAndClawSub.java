@@ -61,7 +61,7 @@ public class ArmAndClawSub extends SubsystemBase {
     // Config small arm motor.
     smallArmMotorCurrentLimit = new StatorCurrentLimitConfiguration(true, Constants.SMALL_ARM_CURRENT_LIMIT, 0.0, 0.0);
 
-    smallArmMotor.configStatorCurrentLimit(smallArmMotorCurrentLimit);
+    //smallArmMotor.configStatorCurrentLimit(smallArmMotorCurrentLimit);
     smallArmMotor.setNeutralMode(NeutralMode.Brake);
     smallArmMotor.setInverted(TalonFXInvertType.Clockwise);
 
@@ -79,11 +79,15 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public boolean getLimitSwitchValue() {
-    return armLimitSwitch.get();
+    return !armLimitSwitch.get();
   }
 
   public void stopMotors() {
     smallArmMotor.neutralOutput();
+    bigArmMotor.neutralOutput();
+  }
+
+  public void stopBigArmMotor() {
     bigArmMotor.neutralOutput();
   }
 
@@ -92,7 +96,13 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void setBigArmMotor(double power) {
-    bigArmMotor.set(TalonFXControlMode.PercentOutput, power);
+    if (getLimitSwitchValue()) {
+      stopBigArmMotor();
+      SmartDashboard.putBoolean("Big arm at limit", true);
+    } else {
+      bigArmMotor.set(TalonFXControlMode.PercentOutput, power);
+      SmartDashboard.putBoolean("Big arm at limit", false);
+    }
   }
 
   public void setSmallArmSetPoint(double setpoint) {
@@ -122,8 +132,6 @@ public class ArmAndClawSub extends SubsystemBase {
   @Override
   public void periodic() {
     run();
-    SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
-    SmartDashboard.putNumber("Big arm position", getBigArmPosition());
   }
 
   public void run() {
@@ -131,7 +139,12 @@ public class ArmAndClawSub extends SubsystemBase {
     //setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
 
     SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
+    SmartDashboard.putNumber("Small arm setpoint", smallArmSetPoint);
+
     SmartDashboard.putBoolean("Limit switch", getLimitSwitchValue());
+
+    SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
+    SmartDashboard.putNumber("Big arm position", getBigArmPosition());
   }
 
   public void clawOpen() {
@@ -158,7 +171,7 @@ public class ArmAndClawSub extends SubsystemBase {
 
   public void armMiddle() {
     setBigArmSetPoint(12811.0);
-    setSmallArmSetPoint(350000.0);
+    setSmallArmSetPoint(18597.0);
   }
 
   public void armHigher() {

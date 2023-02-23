@@ -25,6 +25,10 @@ public class SwerveModule {
   private double desiredSpeed = 0.0;
   private WPI_TalonFX wheelMotor;
   private double wheelMotorEncoderOffset = 0.0; // Used for reseting motor encoder.
+  private double wheelDirection = FORWARD;
+
+  private static final double FORWARD = 1;
+  private static final double BACKWARD = -1;
 
   // Turn.
   private ConfigurablePID turnPid;
@@ -65,7 +69,7 @@ public class SwerveModule {
   }
 
   public void setWheelMotor(double speed) {
-    //wheelMotor.set(TalonFXControlMode.PercentOutput, speed);
+    wheelMotor.set(TalonFXControlMode.PercentOutput, speed * wheelDirection);
   }
 
   public void stopWheelMotor() {
@@ -74,7 +78,7 @@ public class SwerveModule {
   }
 
   public void setTurnMotor(double speed) {
-    //turnMotor.set(speed);
+    turnMotor.set(speed);
   }
 
   public void stopTurnMotor() {
@@ -104,8 +108,16 @@ public class SwerveModule {
   }
   
   public void setDesiredAngle(double desiredAngle) {
-    this.desiredAngle = desiredAngle;
     this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle, getTurnEncoderPosition());
+
+    double turnError = MathTools.angleDis(this.desiredAngle, getAngle());
+
+    if (Math.abs(turnError) > 90.0) {
+      this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle - turnError, getTurnEncoderPosition());
+      wheelDirection = BACKWARD;
+    } else {
+      wheelDirection = FORWARD;
+    }
   }
 
   public double getDistance() {

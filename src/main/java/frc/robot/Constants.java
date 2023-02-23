@@ -72,10 +72,10 @@ public final class Constants {
     public static final double BIG_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
     public static final double SMALL_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
     public static final double BIG_ARM_CURRENT_LIMIT = 20.0;
-    public static final double SMALL_ARM_CURRENT_LIMIT = 10.0;
-    public static final int ARM_LIMIT_SWITCH = 0;
+    public static final double SMALL_ARM_CURRENT_LIMIT = 35.0;
+    public static final int ARM_LIMIT_SWITCH = 9;
 
-    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00002, 0.0, 0.0, 0.0, 2000.0, 0, 0, 0, 0, 0, 0, -0.5, 0.7);
+    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00005, 0.0, 0.0, 0.0, 2000.0, 0, 0, 0, 0, 0, 0, -0.1, 0.7);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
 
     // Limelight.
