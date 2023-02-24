@@ -163,21 +163,18 @@ public class DriveTrainSub extends SubsystemBase {
   }
 
   public void run() {
-
     // Run the swerve module run methods.
     for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
       swerveModuleSubs[i].run();
-
-      // Print debug info.
-      /*
-      SmartDashboard.putString(
-        String.format("Swerve Module %d info", i),
-        String.format("Speed: %lf, Angle: %lf", swerveModuleSubs[i].getSpeed(), swerveModuleSubs[i].getAngle())
-      );
-      */
     }
 
     SmartDashboard.putNumber("Yaw", getYaw());
+
+    SmartDashboard.putNumber("Front right distance", getSwerveModuleFromId(Constants.FRONT_RIGHT_MODULE).getDistance());
+    SmartDashboard.putNumber("Front left distance", getSwerveModuleFromId(Constants.FRONT_LEFT_MODULE).getDistance());
+    SmartDashboard.putNumber("Back right distance", getSwerveModuleFromId(Constants.BACK_RIGHT_MODULE).getDistance());
+    SmartDashboard.putNumber("Back left distance", getSwerveModuleFromId(Constants.BACK_LEFT_MODULE).getDistance());
+    SmartDashboard.putNumber("Avg distance", getAvgWheelEncoder());
   }
 
   // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf

@@ -11,7 +11,8 @@ import frc.robot.Constants;
 public class ArmHigherPositionCommand extends CommandBase {
   /** Creates a new ArmHigherPositionCommand. */
   private ArmAndClawSub m_armAndClawSub;
-  public ArmHigherPositionCommand() {
+  public ArmHigherPositionCommand(ArmAndClawSub armAndClawSub) {
+    m_armAndClawSub = armAndClawSub;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armAndClawSub);
   }

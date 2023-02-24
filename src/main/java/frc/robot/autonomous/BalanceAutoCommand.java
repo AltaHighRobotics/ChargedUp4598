@@ -53,7 +53,7 @@ public class BalanceAutoCommand extends CommandBase {
         m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false);
 
         // Next stage
-        if (distancePid.getError() == 0.0) {
+        if (Math.abs(distancePid.getError()) <= Constants.BALANCE_AUTO_THRESHOLD) {
           stage = 1;
         }
 

@@ -52,7 +52,7 @@ public class SwerveModule {
 
     // Turn motor.
     turnMotor = new CANSparkMax(config.turnMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    turnMotor.setIdleMode(IdleMode.kCoast);
+    turnMotor.setIdleMode(IdleMode.kBrake);
     turnMotor.setInverted(config.invertTurnMotor);
 
     // // Turn encoder.
@@ -102,7 +102,6 @@ public class SwerveModule {
     return turnEncoder.getPosition();
   }
 
-
   public void setTurnEncoderPosition(double position) {
     turnEncoder.setPosition(position);
   }
@@ -115,17 +114,16 @@ public class SwerveModule {
     if (Math.abs(turnError) > 90.0) {
       this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle - turnError, getTurnEncoderPosition());
       wheelDirection = BACKWARD;
+      wheelMotor.setSensorPhase(configuration.invertWheelMotor);
     } else {
       wheelDirection = FORWARD;
+      wheelMotor.setSensorPhase(!configuration.invertWheelMotor);
     }
   }
 
   public double getDistance() {
-    int invert = configuration.invertWheelMotor ? 1 : -1;
     double pos = wheelMotor.getSelectedSensorPosition() 
     * Constants.SWERVE_MODULE_WHEEL_ENCODER_DISTANCE_PER_PULSE;
-    
-    pos *= invert;
 
     if (wheelMotorEncoderOffset != 0.0) {
       pos -= wheelMotorEncoderOffset;

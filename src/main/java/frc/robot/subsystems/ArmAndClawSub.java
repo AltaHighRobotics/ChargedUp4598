@@ -57,6 +57,7 @@ public class ArmAndClawSub extends SubsystemBase {
 
     bigArmMotor.configStatorCurrentLimit(bigArmMotorCurrentLimit);
     bigArmMotor.setNeutralMode(NeutralMode.Brake);
+    bigArmMotor.setInverted(TalonFXInvertType.CounterClockwise);
 
     // Config small arm motor.
     smallArmMotorCurrentLimit = new StatorCurrentLimitConfiguration(true, Constants.SMALL_ARM_CURRENT_LIMIT, 0.0, 0.0);
@@ -83,12 +84,18 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void stopMotors() {
-    smallArmMotor.neutralOutput();
-    bigArmMotor.neutralOutput();
+    stopBigArmMotor();
+    stopSmallArmMotor();
   }
 
   public void stopBigArmMotor() {
     bigArmMotor.neutralOutput();
+    bigArmPid.resetValues();
+  }
+
+  public void stopSmallArmMotor() {
+    smallArmMotor.neutralOutput();
+    smallArmPid.resetValues();
   }
 
   public void setSmallArmMotor(double power) {
@@ -96,7 +103,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void setBigArmMotor(double power) {
-    if (getLimitSwitchValue()) {
+    if (getLimitSwitchValue() && power < 0) {
       stopBigArmMotor();
       SmartDashboard.putBoolean("Big arm at limit", true);
     } else {
@@ -136,7 +143,7 @@ public class ArmAndClawSub extends SubsystemBase {
 
   public void run() {
     setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
-    //setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+    setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
 
     SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
     SmartDashboard.putNumber("Small arm setpoint", smallArmSetPoint);
@@ -170,8 +177,8 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void armMiddle() {
-    setBigArmSetPoint(12811.0);
-    setSmallArmSetPoint(15459.0);
+    setBigArmSetPoint(35568.0);
+    setSmallArmSetPoint(64177.0);
   }
 
   public void armHigher() {

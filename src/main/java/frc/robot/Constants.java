@@ -28,7 +28,7 @@ public final class Constants {
     //public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.04, 0.0038, 0.004, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
     //public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.014, 0.0000002, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, -0.15, 0.15);
     public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.05, 0.0035, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
-    public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.006, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.004, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
 
     public static final int FRONT_RIGHT_MODULE = 0;
     public static final int FRONT_LEFT_MODULE = 1;
@@ -74,12 +74,12 @@ public final class Constants {
     public static final int BIG_ARM_MOTOR = 14;//Change later.
     public static final double BIG_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
     public static final double SMALL_ARM_ENCODER_DISTANCE_PER_PULSE = 1.0;//Change later.
-    public static final double BIG_ARM_CURRENT_LIMIT = 20.0;
+    public static final double BIG_ARM_CURRENT_LIMIT = 33.0;
     public static final double SMALL_ARM_CURRENT_LIMIT = 35.0;
-    public static final int ARM_LIMIT_SWITCH = 9;
+    public static final int ARM_LIMIT_SWITCH = 0;
 
-    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.1, 0.3);
-    public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00008, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.1, 0.2);
+    public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.5);
 
     // Limelight.
     public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
@@ -94,6 +94,7 @@ public final class Constants {
     public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
     public static final double BALANCE_AUTO_DISTANCE = 0.0;
+    public static final double BALANCE_AUTO_THRESHOLD = 0.0;
 
     //Placing Command
     public static final double BIG_ARM_THRESHOLD = 0;
