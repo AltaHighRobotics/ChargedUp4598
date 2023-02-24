@@ -44,7 +44,7 @@ public class LowerLeftPlaceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shouldEnd = !m_vision.isTrackedAprilTagFound();
+    shouldEnd = !m_vision.isReflectiveTargetFound();;
     autoAlignment.reset();
     stage = 0;
 

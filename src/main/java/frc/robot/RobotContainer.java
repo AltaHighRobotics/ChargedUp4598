@@ -31,6 +31,7 @@ public class RobotContainer {
   // Subsystems
   private final DriveTrainSub m_driveTrainSub = new DriveTrainSub();
   private final ArmAndClawSub m_armAndClawSub = new ArmAndClawSub();
+  private final Vision m_Vision = new Vision();
 
   // Commands
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveTrainSub, m_driveController);
@@ -42,6 +43,8 @@ public class RobotContainer {
   private final ArmMiddlePositionCommand m_armMiddlePositionCommand = new ArmMiddlePositionCommand(m_armAndClawSub);
   private final LowerSmallArmCommand m_lowerSmallArmCommand = new LowerSmallArmCommand(m_armAndClawSub);
   private final ArmRestPositionCommand m_armRestPositionCommand = new ArmRestPositionCommand(m_armAndClawSub);
+  private final AprilTagTestCommand m_AprilTagTestCommand = new AprilTagTestCommand(m_Vision);
+  private final AprilTagToggleCommand m_AprilTagToggleCommand = new AprilTagToggleCommand(m_Vision);
 
   // Autonomous.
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
@@ -54,7 +57,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     CommandScheduler.getInstance().setDefaultCommand(m_driveTrainSub, m_driveCommand);
-    //CommandScheduler.getInstance().setDefaultCommand(m_armAndClawSub, m_testArmCommand);
   }
 
   /**
@@ -65,15 +67,21 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Set buttons.
-    //final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_Y_BUTTON);
     final JoystickButton openAndCloseClawButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
     final JoystickButton armMiddleButton = new JoystickButton(m_driveController, Constants.XBOX_B_BUTTON);
     final JoystickButton lowerSmallArmButton = new JoystickButton(m_driveController, Constants.XBOX_X_BUTTON);
+    final JoystickButton limeLightTestButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
+    final JoystickButton limeLightToggleButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
 
-    //zeroAngleButton.whenPressed(m_zeroAngleCommand);
+    zeroAngleButton.whenPressed(m_zeroAngleCommand);
     openAndCloseClawButton.toggleOnTrue(m_clawOpenAndCloseCommand);
     armMiddleButton.toggleOnTrue(m_armMiddlePositionCommand);
     lowerSmallArmButton.toggleOnTrue(m_armRestPositionCommand);
+    limeLightTestButton.whileTrue(m_AprilTagTestCommand);
+    limeLightToggleButton.onTrue(m_AprilTagToggleCommand);
+
+
   }
 
   /**

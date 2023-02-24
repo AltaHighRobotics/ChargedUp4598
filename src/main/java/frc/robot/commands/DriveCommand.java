@@ -126,7 +126,7 @@ public class DriveCommand extends CommandBase {
     );
 
     // Set swerve drive.
-    m_driveTrainSub.setSwerveDrive(strafe, -speed, -rotation, false);
+    m_driveTrainSub.setSwerveDrive(strafe, -speed, -rotation, true);
 
     // Call run method to run PID loops and other stuff.
     m_driveTrainSub.run();

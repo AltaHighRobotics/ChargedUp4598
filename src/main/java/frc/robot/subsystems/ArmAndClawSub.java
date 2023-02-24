@@ -61,7 +61,7 @@ public class ArmAndClawSub extends SubsystemBase {
     // Config small arm motor.
     smallArmMotorCurrentLimit = new StatorCurrentLimitConfiguration(true, Constants.SMALL_ARM_CURRENT_LIMIT, 0.0, 0.0);
 
-    //smallArmMotor.configStatorCurrentLimit(smallArmMotorCurrentLimit);
+    smallArmMotor.configStatorCurrentLimit(smallArmMotorCurrentLimit);
     smallArmMotor.setNeutralMode(NeutralMode.Brake);
     smallArmMotor.setInverted(TalonFXInvertType.Clockwise);
 
@@ -122,7 +122,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void resetSmallArmEncoder() {
-    smallArmEncoderOffset += getSmallArmPosition();
+    smallArmEncoderOffset -= getSmallArmPosition();
   }
 
   public void resetBigArmEncoder() {
@@ -171,7 +171,7 @@ public class ArmAndClawSub extends SubsystemBase {
 
   public void armMiddle() {
     setBigArmSetPoint(12811.0);
-    setSmallArmSetPoint(18597.0);
+    setSmallArmSetPoint(15459.0);
   }
 
   public void armHigher() {

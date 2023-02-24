@@ -43,8 +43,8 @@ public class AutoAlignment {
     // Returns true if at position.
     public boolean run() {
         // Get x and y.
-        double x = m_vision.getAprilTagHorizontalOffset();
-        double y = m_vision.getAprilTagVerticalOffset();
+        double x = m_vision.getHorizontalOffset();
+        double y = m_vision.getVerticalOffset();
 
         // Run pids.
         double speed = verticalPid.runPID(verticalSetpoint, y);

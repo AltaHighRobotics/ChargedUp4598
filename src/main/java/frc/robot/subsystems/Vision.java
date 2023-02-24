@@ -13,44 +13,35 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
 
-  private final LimeLight limeLightAprilTag;
-  private int trackedID;
+  private final LimeLight limeLight;
+  public int trackedID;
 
   private DriverStation.Alliance alliance;
 
   public Vision() {
 
-    limeLightAprilTag = new LimeLight("AprilTag");
+    limeLight = new LimeLight();
 
-    int trackedID = 0;
-
+    trackedID = -1;
   }
 
-  public int getID(String limelight) {
+  public int getID() {
     int AprilTagID;
-    AprilTagID = (int)NetworkTableInstance.getDefault().getTable(limelight).getEntry("tid").getDouble(0.0);
+    AprilTagID = (int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getDouble(0.0);
     return AprilTagID;
   }
 
-  public void setLeftPipeline(String limelight){
-    NetworkTableInstance.getDefault().getTable(limelight).getEntry("pipeline").setNumber(1);
-  }
-
-  public void setCenterPipeline(String limelight){
-    NetworkTableInstance.getDefault().getTable(limelight).getEntry("pipeline").setNumber(2);
-  }
-
-  public void setRightPipeline(String limelight){
-    NetworkTableInstance.getDefault().getTable(limelight).getEntry("pipeline").setNumber(3);
-  }
 
   public void initializeTrackingID(){
-    if (trackedID == 0){
+    alliance = DriverStation.getAlliance();
+
+    if (trackedID == -1){
       if (alliance == DriverStation.Alliance.Red){
       trackedID = 3;
       }
@@ -58,6 +49,7 @@ public class Vision extends SubsystemBase {
         trackedID = 6;
       }
     }
+    SmartDashboard.putString("Alliance", alliance.toString());
   }
 
   public void cycleTrackingID(){
@@ -81,22 +73,37 @@ public class Vision extends SubsystemBase {
     trackedID = number;
   }
 
-  public double getAprilTagHorizontalOffset() {
-    return limeLightAprilTag.getdegRotationToTarget();
+  public double getHorizontalOffset() {
+    return limeLight.getdegRotationToTarget();
   }
 
-  public double getAprilTagVerticalOffset() {
-    return limeLightAprilTag.getdegVerticalToTarget();
+  public double getVerticalOffset() {
+    return limeLight.getdegVerticalToTarget();
   }
 
   public boolean isTrackedAprilTagFound() {
-    int mainID = getID( "AprilTag");
+    int mainID = getID();
     if (mainID == trackedID){
       return true;
     }
     else {
       return false;
     }
+  }
+
+  public boolean isReflectiveTargetFound(){
+    double haveTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    if (haveTarget == 1){
+      return true;
+    }
+    else {
+      return false;
+    }
+
+    }
+
+  public void setLimelightPipeline(int pipeline){
+    limeLight.setPipeline(pipeline);
   }
 
   @Override
