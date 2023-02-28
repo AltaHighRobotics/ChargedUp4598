@@ -91,8 +91,8 @@ public final class Constants {
     public static final double BIG_ARM_CURRENT_LIMIT = 33.0;
     public static final double SMALL_ARM_CURRENT_LIMIT = 35.0;
     public static final int ARM_LIMIT_SWITCH = 0;
-    public static final double BIG_ARM_THRESHOLD = 5000;
-    public static final double SMALL_ARM_THRESHOLD = 2000;
+    public static final double BIG_ARM_THRESHOLD = 1000; // 5000
+    public static final double SMALL_ARM_THRESHOLD = 500; // 2000
 
     public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00008, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.1, 0.2);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.5);
@@ -113,7 +113,7 @@ public final class Constants {
     public static final double BALANCE_AUTO_THRESHOLD = 0.0;
 
     //Placing Command
-    public static final long WAIT_TIME = 5000;
+    public static final long WAIT_TIME = 500;
 
     public static final double LEFT_VERTICAL_SETPOINT = -8.22;
     public static final double LEFT_HORIZONTAL_SETPOINT = 15.07;

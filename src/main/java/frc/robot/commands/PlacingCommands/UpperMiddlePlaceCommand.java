@@ -50,6 +50,7 @@ public class UpperMiddlePlaceCommand extends CommandBase {
     stage = 1;
 
     startTime = 0;
+    m_armAndClawSub.clawClose();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -101,6 +102,7 @@ public class UpperMiddlePlaceCommand extends CommandBase {
   public void end(boolean interrupted) {
     m_driveTrainSub.stop();
     m_armAndClawSub.armRest();
+    m_armAndClawSub.clawOpen();
   }
 
   // Returns true when the command should end.
