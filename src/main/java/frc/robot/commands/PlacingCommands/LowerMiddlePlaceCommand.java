@@ -44,9 +44,10 @@ public class LowerMiddlePlaceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shouldEnd = !m_vision.isTrackedAprilTagFound();
+    m_vision.setLimelightPipeline(Constants.LIMELIGHT_APRIL_TAG_PIPELINE);
+    shouldEnd = !m_vision.isTargetFound();
     autoAlignment.reset();
-    stage = 0;
+    stage = 2;
 
     startTime = 0;
   }

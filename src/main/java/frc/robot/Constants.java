@@ -28,7 +28,7 @@ public final class Constants {
     //public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.04, 0.0038, 0.004, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
     //public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.014, 0.0000002, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, -0.15, 0.15);
     public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.05, 0.0035, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
-    public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.004, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.006, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, -0.15, 0.15);
 
     public static final int FRONT_RIGHT_MODULE = 0;
     public static final int FRONT_LEFT_MODULE = 1;
@@ -65,6 +65,20 @@ public final class Constants {
     public static final int XBOX_LEFT_BUMPER = 5;
     public static final int XBOX_RIGHT_BUMPER = 6;
 
+    public static final int BUTTON_BOX = 1;
+
+    public static final int TOGGLE_BUTTON = 12;
+    public static final int BOTTOM_LEFT_BUTTON = 11;
+    public static final int MIDDLE_LEFT_BUTTON = 10;
+    public static final int TOP_LEFT_BUTTON = 9;
+    public static final int BOTTOM_CENTER_BUTTON = 8;
+    public static final int MIDDLE_CENTER_BUTTON = 7;
+    public static final int TOP_CENTER_BUTTON = 6;
+    public static final int BOTTOM_RIGHT_BUTTON = 5;
+    public static final int MIDDLE_RIGHT_BUTTON = 4;
+    public static final int TOP_RIGHT_BUTTON = 3;
+
+
     //Pistons.
     public static final int CLAW_PISTON_1 = 0;//Change later.
     public static final int CLAW_PISTON_2 = 0;//Change later.
@@ -77,36 +91,41 @@ public final class Constants {
     public static final double BIG_ARM_CURRENT_LIMIT = 33.0;
     public static final double SMALL_ARM_CURRENT_LIMIT = 35.0;
     public static final int ARM_LIMIT_SWITCH = 0;
+    public static final double BIG_ARM_THRESHOLD = 5000;
+    public static final double SMALL_ARM_THRESHOLD = 2000;
 
     public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00008, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.1, 0.2);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.5);
 
     // Limelight.
-    public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.000000001, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
     public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
 
     public static final double LIMELIGHT_VERTICAL_SETPOINT = 0.0;
     
     public static final int LIMELIGHT_APRIL_TAG_PIPELINE = 0;
-    public static final int LIMELIGHT_REFLECTIVE_TAPE = 1;
+    public static final int LIMELIGHT_REFLECTIVE_TAPE_PIPELINE = 1;
 
     // Autonomous.
-    public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.3, 0.3);
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
-    public static final double BALANCE_AUTO_DISTANCE = 0.0;
+    public static final double BALANCE_AUTO_DISTANCE = 2.0;
     public static final double BALANCE_AUTO_THRESHOLD = 0.0;
 
     //Placing Command
-    public static final double BIG_ARM_THRESHOLD = 0;
-    public static final double SMALL_ARM_THRESHOLD = 0;
-    public static final long WAIT_TIME = 0;
+    public static final long WAIT_TIME = 5000;
 
-    public static final double LEFT_VERTICAL_SETPOINT = -10.75;
-    public static final double LEFT_HORIZONTAL_SETPOINT = 14.8;
+    public static final double LEFT_VERTICAL_SETPOINT = -8.22;
+    public static final double LEFT_HORIZONTAL_SETPOINT = 15.07;
 
-    public static final double MIDDLE_VERTICAL_SETPOINT = -21.19;
-    public static final double MIDDLE_HORIZONTAL_SETPOINT = 3.64;
+    public static final double MIDDLE_VERTICAL_SETPOINT = -10.99;
+    public static final double MIDDLE_HORIZONTAL_SETPOINT = -3.89;
 
-    public static final double RIGHT_VERTICAL_SETPOINT = 0;
-    public static final double RIGHT_HORIZONTAL_SETPOINT = 0;
+    public static final double RIGHT_VERTICAL_SETPOINT = -8.22;
+    public static final double RIGHT_HORIZONTAL_SETPOINT = 15.07;
+
+    // Auto alignment.
+    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 0.0;
+    public static final double AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD = 0.0;
+
 }

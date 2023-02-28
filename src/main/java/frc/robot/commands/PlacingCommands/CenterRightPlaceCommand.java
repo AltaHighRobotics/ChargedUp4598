@@ -44,9 +44,10 @@ public class CenterRightPlaceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shouldEnd = !m_vision.isReflectiveTargetFound();
+    m_vision.setLimelightPipeline(Constants.LIMELIGHT_REFLECTIVE_TAPE_PIPELINE);
+    shouldEnd = !m_vision.isTargetFound();
     autoAlignment.reset();
-    stage = 0;
+    stage = 1;
 
     startTime = 0;
   }

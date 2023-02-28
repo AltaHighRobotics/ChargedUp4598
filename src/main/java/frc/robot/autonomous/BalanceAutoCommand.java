@@ -50,17 +50,18 @@ public class BalanceAutoCommand extends CommandBase {
     switch (stage) {
       case 0: // Drive to platform.
         speed = distancePid.runPID(Constants.BALANCE_AUTO_DISTANCE, m_driveTrainSub.getAvgWheelEncoder());
-        m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false);
+        m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false, false);
 
         // Next stage
         if (Math.abs(distancePid.getError()) <= Constants.BALANCE_AUTO_THRESHOLD) {
           stage = 1;
+          m_driveTrainSub.stop();
         }
 
         break;
       case 1: // Balance on platform.
         speed = balancePid.runPID(0.0, m_driveTrainSub.getPitch());
-        m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false);
+        m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false, false);
 
         break;
       default:
@@ -68,6 +69,7 @@ public class BalanceAutoCommand extends CommandBase {
         break;
     }
 
+    m_driveTrainSub.run();
     SmartDashboard.putNumber("Stage", stage);
   }
 

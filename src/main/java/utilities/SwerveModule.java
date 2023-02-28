@@ -20,15 +20,15 @@ public class SwerveModule {
   /** Creates a new SwerveModuleSub. */
   private SwerveModuleConfig configuration;
 
+  private static final double FORWARD = 1;
+  private static final double BACKWARD = -1;
+
   // Wheel.
   private ConfigurablePID wheelPid;
   private double desiredSpeed = 0.0;
   private WPI_TalonFX wheelMotor;
   private double wheelMotorEncoderOffset = 0.0; // Used for reseting motor encoder.
   private double wheelDirection = FORWARD;
-
-  private static final double FORWARD = 1;
-  private static final double BACKWARD = -1;
 
   // Turn.
   private ConfigurablePID turnPid;
@@ -48,11 +48,12 @@ public class SwerveModule {
     wheelMotor.configFactoryDefault();
     wheelMotor.setInverted(config.invertWheelMotor);
     wheelMotor.setNeutralMode(NeutralMode.Coast);
+    wheelMotor.setSensorPhase(!configuration.invertWheelMotor);
     resetWheelEncoder();
 
     // Turn motor.
     turnMotor = new CANSparkMax(config.turnMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    turnMotor.setIdleMode(IdleMode.kBrake);
+    turnMotor.setIdleMode(IdleMode.kCoast);
     turnMotor.setInverted(config.invertTurnMotor);
 
     // // Turn encoder.
@@ -109,16 +110,18 @@ public class SwerveModule {
   public void setDesiredAngle(double desiredAngle) {
     this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle, getTurnEncoderPosition());
 
+    /*
     double turnError = MathTools.angleDis(this.desiredAngle, getAngle());
 
     if (Math.abs(turnError) > 90.0) {
-      this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle - turnError, getTurnEncoderPosition());
+      this.desiredAngle = MathTools.getAngleSetPoint(MathTools.wrapAngle(desiredAngle - turnError), getTurnEncoderPosition());
       wheelDirection = BACKWARD;
       wheelMotor.setSensorPhase(configuration.invertWheelMotor);
     } else {
       wheelDirection = FORWARD;
       wheelMotor.setSensorPhase(!configuration.invertWheelMotor);
     }
+    */
   }
 
   public double getDistance() {

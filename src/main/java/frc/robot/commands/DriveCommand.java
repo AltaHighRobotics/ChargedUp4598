@@ -42,27 +42,10 @@ public class DriveCommand extends CommandBase {
 
   // its debugging time )---:
   private void test() {
-    SwerveModule testModule = m_driveTrainSub.getSwerveModuleFromId(2);
-    SmartDashboard.putNumber("Angle", testModule.getAngle());
-
-    double deg = MathTools.wrapAngle((m_driveController.getRawAxis(4) + 1) * 180);
-    double speed = Math.abs(m_driveController.getRawAxis(1) * 0.4);
-
-    //if (Math.abs(m_driveController.getRawAxis(1)) < 0.15) {
-    //  speed = 0.0;
-    //}
-
-    SmartDashboard.putNumber("joystick", deg);
-    SmartDashboard.putNumber("speed joystick", speed);
-    SmartDashboard.putNumber("Error", testModule.getSpeedError());
-
-    //testModule.setDesiredSpeed(speed);
-    testModule.setDesiredAngle(deg);
-    testModule.setWheelMotor(speed);
-    testModule.run();
-
-    SmartDashboard.putNumber("Wheel speed", testModule.getSpeed());
-    SmartDashboard.putNumber("Wheel position", testModule.getDistance());
+    for (SwerveModule m : m_driveTrainSub.getSwerveModules()) {
+      m.setWheelMotor(0.2);
+      m.setTurnMotor(0.3);
+    }
   }
 
   private void test2() {
@@ -126,7 +109,7 @@ public class DriveCommand extends CommandBase {
     );
 
     // Set swerve drive.
-    m_driveTrainSub.setSwerveDrive(strafe, -speed, -rotation, true);
+    m_driveTrainSub.setSwerveDrive(strafe, -speed, rotation, true, true);
 
     // Call run method to run PID loops and other stuff.
     m_driveTrainSub.run();

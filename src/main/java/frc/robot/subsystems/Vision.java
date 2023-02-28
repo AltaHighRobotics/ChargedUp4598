@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import limelightvision.limelight.frc.LimeLight;
 
 import javax.lang.model.util.ElementScanner14;
@@ -91,7 +92,7 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  public boolean isReflectiveTargetFound(){
+  public boolean isTargetFound(){
     double haveTarget = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     if (haveTarget == 1){
       return true;
@@ -104,6 +105,18 @@ public class Vision extends SubsystemBase {
 
   public void setLimelightPipeline(int pipeline){
     limeLight.setPipeline(pipeline);
+  }
+
+  public void togglePipeline(){
+    double currentPipeline = NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").getDouble(-1);
+
+    if (currentPipeline == Constants.LIMELIGHT_APRIL_TAG_PIPELINE){
+      setLimelightPipeline(Constants.LIMELIGHT_REFLECTIVE_TAPE_PIPELINE);
+    }
+    else if(currentPipeline == Constants.LIMELIGHT_REFLECTIVE_TAPE_PIPELINE){
+      setLimelightPipeline(Constants.LIMELIGHT_APRIL_TAG_PIPELINE);
+    }
+
   }
 
   @Override

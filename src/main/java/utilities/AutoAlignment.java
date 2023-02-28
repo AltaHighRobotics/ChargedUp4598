@@ -51,13 +51,14 @@ public class AutoAlignment {
         double strafe = horizontalPid.runPID(horizontalSetpoint, x);
 
         // At position.
-        if (verticalPid.getError() == 0.0 && horizontalPid.getError() == 0.0) {
+        if (Math.abs(verticalPid.getError()) <= Constants.AUTO_ALIGNMENT_VERTICAL_THRESHOLD 
+        && Math.abs(horizontalPid.getError()) <= Constants.AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD) {
             atPosition = true;
             m_driveTrainSub.stop();
             return true;
         }
 
-        m_driveTrainSub.setSwerveDrive(strafe, speed, 0.0, false);
+        m_driveTrainSub.setSwerveDrive(strafe, speed, 0.0, false, false);
         m_driveTrainSub.run();
         atPosition = false;
         return false;

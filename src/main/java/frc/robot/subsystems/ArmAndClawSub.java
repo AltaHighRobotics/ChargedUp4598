@@ -40,6 +40,14 @@ public class ArmAndClawSub extends SubsystemBase {
   private double smallArmEncoderOffset = 0.0;
   private double bigArmEncoderOffset = 0.0;
 
+  enum PositioningOrders {
+    SAME_TIME,
+    SMALL_ARM_FIRST,
+    BIG_ARM_FIRST
+  }
+
+  private PositioningOrders positioningOrder = PositioningOrders.SAME_TIME;
+
   public ArmAndClawSub() {
     // Solenoids.
     clawPiston1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.CLAW_PISTON_1);
@@ -142,8 +150,43 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void run() {
-    setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
-    setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+    boolean bigArmAtPosition, smallArmAtPosition;
+    bigArmAtPosition = Math.abs(bigArmPid.getError()) <= Constants.BIG_ARM_THRESHOLD;
+    smallArmAtPosition = Math.abs(smallArmPid.getError()) <= Constants.SMALL_ARM_THRESHOLD;
+
+    switch (positioningOrder) {
+      case SAME_TIME:
+        setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+        setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+
+        SmartDashboard.putString("Arm positioning order", "same time");
+        break;
+      case SMALL_ARM_FIRST:
+        setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+
+        if (smallArmAtPosition) {
+          setBigArmMotor(bigArmEncoderOffset);
+        } else {
+          stopBigArmMotor();
+        }
+
+        SmartDashboard.putString("Arm positioning order", "small arm first");
+        break;
+      case BIG_ARM_FIRST:
+        setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+
+        if (bigArmAtPosition) {
+          setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+        } else {
+          stopSmallArmMotor();
+        }
+
+        SmartDashboard.putString("Arm positioning order", "big arm first");
+        break;
+      default:
+        SmartDashboard.putString("Arm positioning order", "other");
+        break;
+    }
 
     SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
     SmartDashboard.putNumber("Small arm setpoint", smallArmSetPoint);
@@ -157,38 +200,54 @@ public class ArmAndClawSub extends SubsystemBase {
   public void clawOpen() {
     clawPiston1.set(true);
     SmartDashboard.putBoolean("Claw open", true);
-    //clawPiston2.set(true);
+    System.out.println("Claw open");
   }
 
   public void clawClose() {
     clawPiston1.set(false);
     SmartDashboard.putBoolean("Claw open", false);
-    //clawPiston2.set(false);
+    System.out.println("Claw close");
+  }
+
+  public void toggleClaw() {
+    clawPiston1.set(!clawPiston1.get());
+    System.out.println("Toggle claw");
+    SmartDashboard.putBoolean("Claw open", clawPiston1.get());
   }
 
   public void armGrab() {
-    setBigArmSetPoint(0.0);
-    setSmallArmSetPoint(0.0);
+    setBigArmSetPoint(-37849.0);
+    setSmallArmSetPoint(5202.0);
+    SmartDashboard.putString("Arm position", "grab");
+    positioningOrder = PositioningOrders.BIG_ARM_FIRST;
   }
 
   public void armLower() {
-    setBigArmSetPoint(0.0);
-    setSmallArmSetPoint(0.0);
+    setBigArmSetPoint(16709.0);
+    setSmallArmSetPoint(116009.0);
+    SmartDashboard.putString("Arm position", "Lower");
+    positioningOrder = PositioningOrders.SAME_TIME;
   }
 
   public void armMiddle() {
-    setBigArmSetPoint(35568.0);
-    setSmallArmSetPoint(64177.0);
+    setBigArmSetPoint(-34057.0);
+    setSmallArmSetPoint(77681.0);
+    SmartDashboard.putString("Arm position", "middle");
+    positioningOrder = PositioningOrders.SAME_TIME;
   }
 
   public void armHigher() {
-    setBigArmSetPoint(0.0);
-    setSmallArmSetPoint(0.0);
+    setBigArmSetPoint(23309.0);
+    setSmallArmSetPoint(84157.0);
+    SmartDashboard.putString("Arm position", "higher");
+    positioningOrder = PositioningOrders.SAME_TIME;
   }
 
   public void armRest() {
-    setBigArmSetPoint(0.0);
-    setSmallArmSetPoint(0.0);
+    setBigArmSetPoint(8972.0);
+    setSmallArmSetPoint(16821.0);
+    SmartDashboard.putString("Arm position", "rest");
+    positioningOrder = PositioningOrders.SAME_TIME;
   }
 
   public double getBigArmError() {

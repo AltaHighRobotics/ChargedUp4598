@@ -178,12 +178,14 @@ public class DriveTrainSub extends SubsystemBase {
   }
 
   // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf
-  public void setSwerveDrive(double strafe, double speed, double rotation, boolean fieldCentric) {
+  // Use limitSpeedMode when its driver controller.
+  public void setSwerveDrive(double strafe, double speed, double rotation, boolean fieldCentric, boolean limitSpeedMode) {
     int i;
-    double x, y, temp;
+    double x, y, z, temp;
 
     x = strafe;
     y = speed;
+    z = -rotation;
 
     // Field centric.
     double yaw, angleCos, angleSin;
@@ -198,10 +200,10 @@ public class DriveTrainSub extends SubsystemBase {
       y = temp;
     }
   
-    double a = x - rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
-    double b = x + rotation * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
-    double c = y - rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
-    double d = y + rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+    double a = x - z * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
+    double b = x + z * (Constants.VEHICLE_WHEELBASE / Constants.VEHICLE_RADIUS);
+    double c = y - z * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
+    double d = y + z * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_RADIUS);
 
     // Calculate module speeds.
     double []moduleSpeeds = {
@@ -227,7 +229,12 @@ public class DriveTrainSub extends SubsystemBase {
       // Covert angle unit.
       moduleAngles[i] = MathTools.makeNonNegAngle(Math.toDegrees(moduleAngles[i]));
 
-      swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i] * Constants.DRIVE_SPEED);
+      if (limitSpeedMode) {
+        swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i] * Constants.DRIVE_SPEED);
+      } else {
+        swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i]);
+      }
+      
       swerveModuleSubs[i].setDesiredAngle(moduleAngles[i]);
     }
   }
