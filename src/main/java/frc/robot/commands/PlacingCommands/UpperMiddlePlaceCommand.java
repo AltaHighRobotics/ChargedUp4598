@@ -70,7 +70,8 @@ public class UpperMiddlePlaceCommand extends CommandBase {
       case 1: // Raise arm to position.
         m_armAndClawSub.armHigher();
 
-        if (m_armAndClawSub.getBigArmErrorAbs() <= Constants.BIG_ARM_THRESHOLD && m_armAndClawSub.getSmallArmErrorAbs() <= Constants.SMALL_ARM_THRESHOLD) {
+        if (m_armAndClawSub.getBigArmErrorAbs() <= Constants.BIG_ARM_THRESHOLD && m_armAndClawSub.getSmallArmErrorAbs() <= Constants.SMALL_ARM_THRESHOLD &&
+        m_armAndClawSub.atLastPosition()) {
           stage = 2;
         }
 

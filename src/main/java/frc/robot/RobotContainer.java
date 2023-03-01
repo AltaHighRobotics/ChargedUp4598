@@ -81,7 +81,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    //CommandScheduler.getInstance().setDefaultCommand(m_driveTrainSub, m_driveCommand);
+    CommandScheduler.getInstance().setDefaultCommand(m_driveTrainSub, m_driveCommand);
   }
 
   /**

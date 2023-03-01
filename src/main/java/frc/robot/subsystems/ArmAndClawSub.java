@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import java.util.Vector;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -47,6 +48,31 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   private PositioningOrders positioningOrder = PositioningOrders.SAME_TIME;
+
+  public class ArmPositioningData {
+    public double smallArmSetPoint;
+    public double bigArmSetPoint;
+    public PositioningOrders positioningOrder;
+
+    public ArmPositioningData(double smallArmSetPoint, double bigArmSetPoint, PositioningOrders positioningOrder) {
+      this.smallArmSetPoint = smallArmSetPoint;
+      this.bigArmSetPoint = bigArmSetPoint;
+      this.positioningOrder = positioningOrder;
+    }
+  }
+
+  enum ArmPositionOptions {
+    NONE,
+    GRAB,
+    HIGHER,
+    LOWER,
+    MIDDLE,
+    REST
+  }
+
+  private ArmPositionOptions lastPositionOption = ArmPositionOptions.NONE;
+
+  Vector<ArmPositioningData> armPositions = new Vector<ArmPositioningData>();
 
   public ArmAndClawSub() {
     // Solenoids.
@@ -89,6 +115,10 @@ public class ArmAndClawSub extends SubsystemBase {
 
   public boolean getLimitSwitchValue() {
     return !armLimitSwitch.get();
+  }
+
+  private void clearPositions() {
+    armPositions.clear();
   }
 
   public void stopMotors() {
@@ -144,15 +174,48 @@ public class ArmAndClawSub extends SubsystemBase {
     bigArmEncoderOffset += getBigArmPosition();
   }
 
+  public boolean isBigArmAtPosition() {
+    return Math.abs(getBigArmPosition() - bigArmSetPoint) <= Constants.BIG_ARM_THRESHOLD;
+  }
+
+  public boolean isSmallArmAtPosition() {
+    return Math.abs(getSmallArmPosition() - smallArmSetPoint) <= Constants.SMALL_ARM_THRESHOLD;
+  }
+
+  public boolean isArmAtPosition() {
+    return isBigArmAtPosition() && isSmallArmAtPosition();
+  }
+
+  public boolean atLastPosition() {
+    return armPositions.isEmpty();
+  }
+
   @Override
   public void periodic() {
     run();
   }
 
   public void run() {
+    updatePositions();
+    runArmPids();
+
+    SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
+    SmartDashboard.putNumber("Small arm setpoint", smallArmSetPoint);
+
+    SmartDashboard.putBoolean("Limit switch", getLimitSwitchValue());
+
+    SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
+    SmartDashboard.putNumber("Big arm position", getBigArmPosition());
+    SmartDashboard.putNumber("Arm Positions count", armPositions.size());
+  }
+
+  private void runArmPids() {
     boolean bigArmAtPosition, smallArmAtPosition;
-    bigArmAtPosition = Math.abs(bigArmPid.getError()) <= Constants.BIG_ARM_THRESHOLD;
-    smallArmAtPosition = Math.abs(smallArmPid.getError()) <= Constants.SMALL_ARM_THRESHOLD;
+    bigArmAtPosition = isBigArmAtPosition();
+    smallArmAtPosition = isSmallArmAtPosition();
+
+    SmartDashboard.putBoolean("Small arm at position", smallArmAtPosition);
+    SmartDashboard.putBoolean("Big arm at position", bigArmAtPosition);
 
     switch (positioningOrder) {
       case SAME_TIME:
@@ -165,7 +228,7 @@ public class ArmAndClawSub extends SubsystemBase {
         setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
 
         if (smallArmAtPosition) {
-          setBigArmMotor(bigArmEncoderOffset);
+          setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
         } else {
           stopBigArmMotor();
         }
@@ -186,68 +249,137 @@ public class ArmAndClawSub extends SubsystemBase {
       default:
         SmartDashboard.putString("Arm positioning order", "other");
         break;
+    }  
+  }
+
+  // Update the arm setpoints based on data in armPositions.
+  private void updatePositions() {
+    if (armPositions.isEmpty()) {
+      return;
     }
 
-    SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
-    SmartDashboard.putNumber("Small arm setpoint", smallArmSetPoint);
+    // Check if arm is at position.
+    boolean armAtPosition = isArmAtPosition();
 
-    SmartDashboard.putBoolean("Limit switch", getLimitSwitchValue());
+    // Is at position.
+    if (armAtPosition) {
+      applyNextArmPosition();
+    }
+  }
 
-    SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
-    SmartDashboard.putNumber("Big arm position", getBigArmPosition());
+  private void applyNextArmPosition() {
+    ArmPositioningData positioningData;
+
+    if (armPositions.isEmpty()) {
+      return;
+    }
+    
+    // Get end position.
+    positioningData = armPositions.firstElement();
+
+    // Apply.
+    this.bigArmSetPoint = positioningData.bigArmSetPoint;
+    this.smallArmSetPoint = positioningData.smallArmSetPoint;
+    this.positioningOrder = positioningData.positioningOrder;
+
+    // Remove from vector.
+    armPositions.remove(positioningData);
+  }
+
+  public void setArmPositions(Vector<ArmPositioningData> armPositions) {
+    this.armPositions = armPositions;
+    applyNextArmPosition();
   }
 
   public void clawOpen() {
     clawPiston1.set(true);
     SmartDashboard.putBoolean("Claw open", true);
-    System.out.println("Claw open");
   }
 
   public void clawClose() {
     clawPiston1.set(false);
     SmartDashboard.putBoolean("Claw open", false);
-    System.out.println("Claw close");
   }
 
   public void toggleClaw() {
     clawPiston1.set(!clawPiston1.get());
-    System.out.println("Toggle claw");
     SmartDashboard.putBoolean("Claw open", clawPiston1.get());
   }
 
   public void armGrab() {
+    if (lastPositionOption == ArmPositionOptions.GRAB) {
+      return;
+    }
+
     setBigArmSetPoint(-37849.0);
     setSmallArmSetPoint(5202.0);
     SmartDashboard.putString("Arm position", "grab");
     positioningOrder = PositioningOrders.BIG_ARM_FIRST;
+    clearPositions();
+
+    lastPositionOption = ArmPositionOptions.GRAB;
   }
 
   public void armLower() {
+    if (lastPositionOption == ArmPositionOptions.LOWER) {
+      return;
+    }
+
     setBigArmSetPoint(16709.0);
     setSmallArmSetPoint(116009.0);
     SmartDashboard.putString("Arm position", "Lower");
     positioningOrder = PositioningOrders.SAME_TIME;
+    clearPositions();
+
+    lastPositionOption = ArmPositionOptions.LOWER;
   }
 
   public void armMiddle() {
+    if (lastPositionOption == ArmPositionOptions.MIDDLE) {
+      return;
+    }
+
     setBigArmSetPoint(-34057.0);
     setSmallArmSetPoint(77681.0);
+
     SmartDashboard.putString("Arm position", "middle");
     positioningOrder = PositioningOrders.SAME_TIME;
+
+    lastPositionOption = ArmPositionOptions.MIDDLE;
   }
 
   public void armHigher() {
-    setBigArmSetPoint(23309.0);
-    setSmallArmSetPoint(84157.0);
+    if (lastPositionOption == ArmPositionOptions.HIGHER) {
+      return;
+    }
+
+    //setBigArmSetPoint(23309.0);
+    //setSmallArmSetPoint(84157.0);
+
     SmartDashboard.putString("Arm position", "higher");
-    positioningOrder = PositioningOrders.SAME_TIME;
+    //positioningOrder = PositioningOrders.SAME_TIME;
+    //clearPositions();
+
+    Vector<ArmPositioningData> newArmPositions = new Vector<ArmPositioningData>();
+    newArmPositions.add(new ArmPositioningData(84157.0, -37849.0, PositioningOrders.SAME_TIME));
+    newArmPositions.add(new ArmPositioningData(84157.0, 23309.0, PositioningOrders.SAME_TIME));
+    setArmPositions(newArmPositions);
+
+    lastPositionOption = ArmPositionOptions.HIGHER;
   }
 
   public void armRest() {
+    if (lastPositionOption == ArmPositionOptions.REST) {
+      return;
+    }
+
     setBigArmSetPoint(8972.0);
     setSmallArmSetPoint(16821.0);
     SmartDashboard.putString("Arm position", "rest");
     positioningOrder = PositioningOrders.SAME_TIME;
+    clearPositions();
+
+    lastPositionOption = ArmPositionOptions.REST;
   }
 
   public double getBigArmError() {

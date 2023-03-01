@@ -48,7 +48,7 @@ public class SwerveModule {
     wheelMotor.configFactoryDefault();
     wheelMotor.setInverted(config.invertWheelMotor);
     wheelMotor.setNeutralMode(NeutralMode.Coast);
-    wheelMotor.setSensorPhase(!configuration.invertWheelMotor);
+    wheelMotor.setSensorPhase(configuration.invertWheelMotor);
     resetWheelEncoder();
 
     // Turn motor.
@@ -108,20 +108,21 @@ public class SwerveModule {
   }
   
   public void setDesiredAngle(double desiredAngle) {
-    this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle, getTurnEncoderPosition());
+    double turnDis = MathTools.angleDis(MathTools.wrapAngle(desiredAngle), getAngle());
 
-    /*
-    double turnError = MathTools.angleDis(this.desiredAngle, getAngle());
+    if (Math.abs(turnDis) > 90.0) {
+      this.desiredAngle = MathTools.getAngleSetPoint(
+        MathTools.wrapAngle(desiredAngle - turnDis), 
+        getTurnEncoderPosition()
+      );
 
-    if (Math.abs(turnError) > 90.0) {
-      this.desiredAngle = MathTools.getAngleSetPoint(MathTools.wrapAngle(desiredAngle - turnError), getTurnEncoderPosition());
       wheelDirection = BACKWARD;
-      wheelMotor.setSensorPhase(configuration.invertWheelMotor);
-    } else {
-      wheelDirection = FORWARD;
       wheelMotor.setSensorPhase(!configuration.invertWheelMotor);
+    } else {
+      this.desiredAngle = MathTools.getAngleSetPoint(desiredAngle, getTurnEncoderPosition());
+      wheelDirection = FORWARD;
+      wheelMotor.setSensorPhase(configuration.invertWheelMotor);
     }
-    */
   }
 
   public double getDistance() {

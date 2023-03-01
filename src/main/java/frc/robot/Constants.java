@@ -91,14 +91,14 @@ public final class Constants {
     public static final double BIG_ARM_CURRENT_LIMIT = 33.0;
     public static final double SMALL_ARM_CURRENT_LIMIT = 35.0;
     public static final int ARM_LIMIT_SWITCH = 0;
-    public static final double BIG_ARM_THRESHOLD = 1000; // 5000
-    public static final double SMALL_ARM_THRESHOLD = 500; // 2000
+    public static final double BIG_ARM_THRESHOLD = 13922.0; // 5000
+    public static final double SMALL_ARM_THRESHOLD = 1858; // 500
 
-    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00008, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.1, 0.2);
+    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00008, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.5);
 
     // Limelight.
-    public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.000000001, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.03, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
 
     public static final double LIMELIGHT_VERTICAL_SETPOINT = 0.0;
@@ -107,7 +107,7 @@ public final class Constants {
     public static final int LIMELIGHT_REFLECTIVE_TAPE_PIPELINE = 1;
 
     // Autonomous.
-    public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.3, 0.3);
+    public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.08, 0.00035, 0.005, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.25, 0.25);
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
     public static final double BALANCE_AUTO_DISTANCE = 2.0;
     public static final double BALANCE_AUTO_THRESHOLD = 0.0;
@@ -125,7 +125,7 @@ public final class Constants {
     public static final double RIGHT_HORIZONTAL_SETPOINT = 15.07;
 
     // Auto alignment.
-    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 0.0;
-    public static final double AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD = 0.0;
+    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 100000.0;
+    public static final double AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD = 1.0;
 
 }

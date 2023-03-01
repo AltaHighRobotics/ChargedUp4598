@@ -2,6 +2,7 @@ package utilities;
 
 import frc.robot.subsystems.DriveTrainSub;
 import frc.robot.subsystems.Vision;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class AutoAlignment {
@@ -50,6 +51,9 @@ public class AutoAlignment {
         double speed = verticalPid.runPID(verticalSetpoint, y);
         double strafe = horizontalPid.runPID(horizontalSetpoint, x);
 
+        SmartDashboard.putNumber("Horizontal setpoint", horizontalSetpoint);
+        SmartDashboard.putNumber("Vertical setpoint", verticalSetpoint);
+
         // At position.
         if (Math.abs(verticalPid.getError()) <= Constants.AUTO_ALIGNMENT_VERTICAL_THRESHOLD 
         && Math.abs(horizontalPid.getError()) <= Constants.AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD) {
@@ -57,6 +61,8 @@ public class AutoAlignment {
             m_driveTrainSub.stop();
             return true;
         }
+
+        speed = 0.0;
 
         m_driveTrainSub.setSwerveDrive(strafe, speed, 0.0, false, false);
         m_driveTrainSub.run();
