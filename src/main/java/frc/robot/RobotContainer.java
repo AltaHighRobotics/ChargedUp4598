@@ -60,15 +60,15 @@ public class RobotContainer {
   private final ArmGrabPositionCommand m_armGrabPositionCommand = new ArmGrabPositionCommand(m_armAndClawSub);
 
   //Placing Commands
-  private final CenterLeftPlaceCommand m_CenterLeftPlaceCommand = new CenterLeftPlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final CenterMiddlePlaceCommand m_CenterMiddlePlaceCommand = new CenterMiddlePlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final CenterRightPlaceCommand m_CenterRightPlaceCommand = new CenterRightPlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final LowerLeftPlaceCommand m_LowerLeftPlaceCommand = new LowerLeftPlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final LowerMiddlePlaceCommand m_LowerMiddlePlaceCommand = new LowerMiddlePlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final LowerRightPlaceCommand m_LowerRightPlaceCommand = new LowerRightPlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final UpperLeftPlaceCommand m_UpperLeftPlaceCommand = new UpperLeftPlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final UpperMiddlePlaceCommand m_UpperMiddlePlaceCommand = new UpperMiddlePlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
-  private final UpperRightPlaceCommand m_UpperRightPlaceCommand = new UpperRightPlaceCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final CenterLeftPlaceCommand m_CenterLeftPlaceCommand = new CenterLeftPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final CenterMiddlePlaceCommand m_CenterMiddlePlaceCommand = new CenterMiddlePlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final CenterRightPlaceCommand m_CenterRightPlaceCommand = new CenterRightPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final LowerLeftPlaceCommand m_LowerLeftPlaceCommand = new LowerLeftPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final LowerMiddlePlaceCommand m_LowerMiddlePlaceCommand = new LowerMiddlePlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final LowerRightPlaceCommand m_LowerRightPlaceCommand = new LowerRightPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final UpperLeftPlaceCommand m_UpperLeftPlaceCommand = new UpperLeftPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final UpperMiddlePlaceCommand m_UpperMiddlePlaceCommand = new UpperMiddlePlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final UpperRightPlaceCommand m_UpperRightPlaceCommand = new UpperRightPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
 
 
   // Autonomous.

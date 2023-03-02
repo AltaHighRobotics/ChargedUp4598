@@ -11,12 +11,14 @@ import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import utilities.ConfigurablePID;
+import edu.wpi.first.wpilibj.XboxController;
 import utilities.AutoAlignment;
 import frc.robot.Constants;
 
 public class CenterLeftPlaceCommand extends CommandBase {
   /** Creates a new UpperLeftPlaceCommand. */
 
+  private XboxController m_driveController;
   private DriveTrainSub m_driveTrainSub;
   private ArmAndClawSub m_armAndClawSub;
   private Vision m_vision;
@@ -30,10 +32,11 @@ public class CenterLeftPlaceCommand extends CommandBase {
 
   private int stage;
 
-  public CenterLeftPlaceCommand(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
+  public CenterLeftPlaceCommand(XboxController driveController, DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
     m_driveTrainSub = driveTrainSub;
     m_armAndClawSub = armAndClawSub;
     m_vision = vision;
+    m_driveController = driveController;
 
     autoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.LEFT_VERTICAL_SETPOINT, Constants.LEFT_HORIZONTAL_SETPOINT, false);
 
@@ -57,6 +60,13 @@ public class CenterLeftPlaceCommand extends CommandBase {
   public void execute() {
     // 20.5 deg vertical field of view.
     // FIX MAGIC NUMBERS
+
+    // If driver stops this command.
+    if (m_driveController.getRawButtonPressed(Constants.STOP_PLACE_COMMAND_BUTTON)) {
+      shouldEnd = true;
+      return;
+    }
+
     switch (stage) {
       case 0: // Align robot with target.
         atPosition = autoAlignment.run();

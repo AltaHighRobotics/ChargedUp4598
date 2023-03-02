@@ -46,7 +46,8 @@ public class Autonomous1Command extends CommandBase {
   @Override
   public void initialize() {
     m_vision.setLimelightPipeline(Constants.LIMELIGHT_APRIL_TAG_PIPELINE);
-    shouldEnd = !m_vision.isTargetFound();
+    //shouldEnd = !m_vision.isTargetFound();
+    shouldEnd = false;
 
     autoAlignment.reset();
     driveBackAutoAlignment.reset();
@@ -54,7 +55,6 @@ public class Autonomous1Command extends CommandBase {
     stage = 0;
 
     startTime = 0;
-    m_armAndClawSub.clawClose();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,25 +65,54 @@ public class Autonomous1Command extends CommandBase {
     switch (stage) {
       case 0: // Go to arm rest position.
         m_armAndClawSub.armRest();
-        stage = 1;
+
+        if (m_armAndClawSub.isAtFinalPosition()) {
+          stage = 1;
+        }
+        
         break;
-      case 1: // Align robot with target.
+      case 1: // Open claw and go to grab position.
+        m_armAndClawSub.clawOpen();
+        m_armAndClawSub.armGrab();
+
+        if (m_armAndClawSub.isAtFinalPosition()) {
+          stage = 2;
+        }
+        
+        break;
+      case 2: // Close claw and wait.
+        m_armAndClawSub.clawClose();
+
+        // Get start time.
+        if (startTime == 0) {
+          startTime = System.currentTimeMillis();
+        }
+
+        // Next stage.
+        if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
+          stage = 3;
+          startTime = 0; // Reset start time.
+        }
+
+        break;
+      case 3: // Align robot with target and arm rest.
+        m_armAndClawSub.armRest();
         atPosition = autoAlignment.run();
 
         if (atPosition) {
-          stage = 2;
+          stage = 4;
         }
 
         break;
-      case 2: // Raise arm to position.
+      case 4: // Raise arm to position.
         m_armAndClawSub.armHigher();
 
         if (m_armAndClawSub.isAtFinalPosition()) {
-          stage = 3;
+          stage = 5;
         }
 
         break;
-      case 3: // Open claw and wait for it.
+      case 5: // Open claw and wait for it.
         m_armAndClawSub.clawOpen();
 
         // Get start time.
@@ -93,16 +122,16 @@ public class Autonomous1Command extends CommandBase {
 
         // Next stage.
         if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
-          stage = 4;
+          stage = 6;
         }
 
         break;
-      case 4: // Drive back and arm rest.
+      case 6: // Drive back and arm rest.
         m_armAndClawSub.armRest();
         atPosition = driveBackAutoAlignment.run();
 
         if (atPosition && m_armAndClawSub.isAtFinalPosition()) {
-          stage = 5;
+          stage = 7;
         }
 
         break;

@@ -117,6 +117,7 @@ public final class Constants {
     public static final double DRIVE_BACK_HORIZONTAL_SETPOINT = -3.89;
 
     //Placing Command
+    public static final int STOP_PLACE_COMMAND_BUTTON = XBOX_X_BUTTON;
     public static final long WAIT_TIME = 500;
 
     public static final double LEFT_VERTICAL_SETPOINT = 0.225;
