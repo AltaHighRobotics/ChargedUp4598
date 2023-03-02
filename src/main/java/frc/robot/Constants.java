@@ -16,7 +16,7 @@ import utilities.SwerveModuleConfig;
  */
 public final class Constants {
     // Speed.
-    public static final double DRIVE_SPEED = 0.25; //0.25
+    public static final double DRIVE_SPEED = 0.5; //0.25
     public static final double SMALL_ARM_LOWER_SPEED = -0.15;
     
     // Swerve module.
@@ -99,7 +99,8 @@ public final class Constants {
 
     // Limelight.
     public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.03, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
-    public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
+    public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.03, 0.00007, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration REFLECTIVE_LIMELIGHT_VERTICAL_PID = new PIDConfiguration(1.0, 0.005, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
 
     public static final double LIMELIGHT_VERTICAL_SETPOINT = 0.0;
     
@@ -112,20 +113,28 @@ public final class Constants {
     public static final double BALANCE_AUTO_DISTANCE = 2.0;
     public static final double BALANCE_AUTO_THRESHOLD = 0.0;
 
+    public static final double DRIVE_BACK_VERTICAL_SETPOINT = 0.227;
+    public static final double DRIVE_BACK_HORIZONTAL_SETPOINT = -3.89;
+
     //Placing Command
     public static final long WAIT_TIME = 500;
 
-    public static final double LEFT_VERTICAL_SETPOINT = -8.22;
-    public static final double LEFT_HORIZONTAL_SETPOINT = 15.07;
+    public static final double LEFT_VERTICAL_SETPOINT = 0.225;
+    public static final double LEFT_HORIZONTAL_SETPOINT = -10.48;
 
-    public static final double MIDDLE_VERTICAL_SETPOINT = -10.99;
+    public static final double MIDDLE_VERTICAL_SETPOINT = 9.0;
     public static final double MIDDLE_HORIZONTAL_SETPOINT = -3.89;
 
-    public static final double RIGHT_VERTICAL_SETPOINT = -8.22;
-    public static final double RIGHT_HORIZONTAL_SETPOINT = 15.07;
+    public static final double RIGHT_VERTICAL_SETPOINT = 0.225;
+    public static final double RIGHT_HORIZONTAL_SETPOINT = -10.48;
 
     // Auto alignment.
-    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 100000.0;
+    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 1.0;
     public static final double AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD = 1.0;
+
+    public static final double AUTO_ALIGNMENT_REFLECTIVE_VERTICAL_THRESHOLD = 0.08;
+    public static final double AUTO_ALIGNMENT_REFLECTIVE_HORIZONTAL_THRESHOLD = 0.5;
+
+    //0.227
 
 }

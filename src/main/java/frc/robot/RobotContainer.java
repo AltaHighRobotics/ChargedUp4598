@@ -128,9 +128,9 @@ public class RobotContainer {
     middleLeftButton.onTrue(m_CenterLeftPlaceCommand);
     middleCenterButton.onTrue(m_CenterMiddlePlaceCommand);
     middleRightButton.onTrue(m_CenterRightPlaceCommand);
-    bottomLeftButton.onTrue(m_LowerLeftPlaceCommand);
-    bottomCenterButton.onTrue(m_LowerMiddlePlaceCommand);
-    bottomRightButton.onTrue(m_LowerRightPlaceCommand);
+    //bottomLeftButton.onTrue(m_LowerLeftPlaceCommand);
+    //bottomCenterButton.onTrue(m_LowerMiddlePlaceCommand);
+    //bottomRightButton.onTrue(m_LowerRightPlaceCommand);
 
   }
 
@@ -141,6 +141,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_balanceAutoCommand;
+    return null;
   }
 }

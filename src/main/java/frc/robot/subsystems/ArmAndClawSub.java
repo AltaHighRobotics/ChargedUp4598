@@ -67,7 +67,9 @@ public class ArmAndClawSub extends SubsystemBase {
     HIGHER,
     LOWER,
     MIDDLE,
-    REST
+    REST,
+    HIGHER_CONE,
+    MIDDLE_CONE
   }
 
   private ArmPositionOptions lastPositionOption = ArmPositionOptions.NONE;
@@ -184,6 +186,11 @@ public class ArmAndClawSub extends SubsystemBase {
 
   public boolean isArmAtPosition() {
     return isBigArmAtPosition() && isSmallArmAtPosition();
+  }
+
+  // Use this instead of 'isArmAtPosition' when checking if arm is at position in subsystems.
+  public boolean isAtFinalPosition() {
+    return isArmAtPosition() && atLastPosition();
   }
 
   public boolean atLastPosition() {
@@ -306,13 +313,48 @@ public class ArmAndClawSub extends SubsystemBase {
     SmartDashboard.putBoolean("Claw open", clawPiston1.get());
   }
 
+  public void armHigherCone() {
+    if (lastPositionOption == ArmPositionOptions.HIGHER_CONE) {
+      return;
+    }
+
+    //setBigArmSetPoint(30698.0);
+    //setSmallArmSetPoint(83066.0);
+
+    SmartDashboard.putString("Arm position", "higher cone");
+    //positioningOrder = PositioningOrders.SAME_TIME;
+    //clearPositions();
+
+    Vector<ArmPositioningData> newArmPositions = new Vector<ArmPositioningData>();
+    newArmPositions.add(new ArmPositioningData(55000.0, -4714.0, PositioningOrders.SAME_TIME));
+    newArmPositions.add(new ArmPositioningData(83066.0, 30698.0, PositioningOrders.SAME_TIME));
+    setArmPositions(newArmPositions);
+
+    lastPositionOption = ArmPositionOptions.HIGHER_CONE;
+  }
+
+  public void armMiddleCone() {
+    if (lastPositionOption == ArmPositionOptions.MIDDLE_CONE) {
+      return;
+    }
+
+    setBigArmSetPoint(-34832.0);
+    setSmallArmSetPoint(79584.0);
+    
+    SmartDashboard.putString("Arm position", "middle cone");
+    positioningOrder = PositioningOrders.SAME_TIME;
+    clearPositions();
+
+    lastPositionOption = ArmPositionOptions.MIDDLE_CONE;
+  }
+
   public void armGrab() {
     if (lastPositionOption == ArmPositionOptions.GRAB) {
       return;
     }
 
     setBigArmSetPoint(-37849.0);
-    setSmallArmSetPoint(5202.0);
+    setSmallArmSetPoint(10241.0);
     SmartDashboard.putString("Arm position", "grab");
     positioningOrder = PositioningOrders.BIG_ARM_FIRST;
     clearPositions();
@@ -361,7 +403,7 @@ public class ArmAndClawSub extends SubsystemBase {
     //clearPositions();
 
     Vector<ArmPositioningData> newArmPositions = new Vector<ArmPositioningData>();
-    newArmPositions.add(new ArmPositioningData(84157.0, -37849.0, PositioningOrders.SAME_TIME));
+    newArmPositions.add(new ArmPositioningData(70000.0, -4714.0, PositioningOrders.SAME_TIME));
     newArmPositions.add(new ArmPositioningData(84157.0, 23309.0, PositioningOrders.SAME_TIME));
     setArmPositions(newArmPositions);
 

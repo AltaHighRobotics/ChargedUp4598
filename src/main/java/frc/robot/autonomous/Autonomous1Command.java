@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.PlacingCommands;
+package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSub;
@@ -14,9 +14,8 @@ import utilities.ConfigurablePID;
 import utilities.AutoAlignment;
 import frc.robot.Constants;
 
-public class LowerRightPlaceCommand extends CommandBase {
-  /** Creates a new UpperLeftPlaceCommand. */
-
+public class Autonomous1Command extends CommandBase {
+  /** Creates a new Autonomous1Command. */
   private DriveTrainSub m_driveTrainSub;
   private ArmAndClawSub m_armAndClawSub;
   private Vision m_vision;
@@ -25,17 +24,19 @@ public class LowerRightPlaceCommand extends CommandBase {
   private boolean shouldEnd;
 
   private AutoAlignment autoAlignment;
+  private AutoAlignment driveBackAutoAlignment;
 
   private long startTime;
 
   private int stage;
 
-  public LowerRightPlaceCommand(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
+  public Autonomous1Command(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
     m_driveTrainSub = driveTrainSub;
     m_armAndClawSub = armAndClawSub;
     m_vision = vision;
 
-    autoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.RIGHT_VERTICAL_SETPOINT, Constants.RIGHT_HORIZONTAL_SETPOINT, false);
+    autoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.MIDDLE_VERTICAL_SETPOINT, Constants.MIDDLE_HORIZONTAL_SETPOINT, true);
+    driveBackAutoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.DRIVE_BACK_VERTICAL_SETPOINT, Constants.DRIVE_BACK_HORIZONTAL_SETPOINT, true);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveTrainSub, m_armAndClawSub, m_vision);
@@ -44,12 +45,16 @@ public class LowerRightPlaceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_vision.setLimelightPipeline(Constants.LIMELIGHT_REFLECTIVE_TAPE_PIPELINE);
+    m_vision.setLimelightPipeline(Constants.LIMELIGHT_APRIL_TAG_PIPELINE);
     shouldEnd = !m_vision.isTargetFound();
+
     autoAlignment.reset();
+    driveBackAutoAlignment.reset();
+
     stage = 0;
 
     startTime = 0;
+    m_armAndClawSub.clawClose();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,23 +63,27 @@ public class LowerRightPlaceCommand extends CommandBase {
     // 20.5 deg vertical field of view.
     // FIX MAGIC NUMBERS
     switch (stage) {
-      case 0: // Align robot with target.
+      case 0: // Go to arm rest position.
+        m_armAndClawSub.armRest();
+        stage = 1;
+        break;
+      case 1: // Align robot with target.
         atPosition = autoAlignment.run();
 
         if (atPosition) {
-          stage = 1;
-        }
-
-        break;
-      case 1: // Raise arm to position.
-        m_armAndClawSub.armLower();
-
-        if (m_armAndClawSub.isAtFinalPosition()) {
           stage = 2;
         }
 
         break;
-      case 2: // Open claw and wait for it.
+      case 2: // Raise arm to position.
+        m_armAndClawSub.armHigher();
+
+        if (m_armAndClawSub.isAtFinalPosition()) {
+          stage = 3;
+        }
+
+        break;
+      case 3: // Open claw and wait for it.
         m_armAndClawSub.clawOpen();
 
         // Get start time.
@@ -84,7 +93,16 @@ public class LowerRightPlaceCommand extends CommandBase {
 
         // Next stage.
         if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
-          stage = 3;
+          stage = 4;
+        }
+
+        break;
+      case 4: // Drive back and arm rest.
+        m_armAndClawSub.armRest();
+        atPosition = driveBackAutoAlignment.run();
+
+        if (atPosition && m_armAndClawSub.isAtFinalPosition()) {
+          stage = 5;
         }
 
         break;
@@ -101,6 +119,7 @@ public class LowerRightPlaceCommand extends CommandBase {
   public void end(boolean interrupted) {
     m_driveTrainSub.stop();
     m_armAndClawSub.armRest();
+    m_armAndClawSub.clawOpen();
   }
 
   // Returns true when the command should end.

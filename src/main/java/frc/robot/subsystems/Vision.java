@@ -79,7 +79,7 @@ public class Vision extends SubsystemBase {
   }
 
   public double getVerticalOffset() {
-    return limeLight.getdegVerticalToTarget();
+    return limeLight.getTargetArea();
   }
 
   public boolean isTrackedAprilTagFound() {

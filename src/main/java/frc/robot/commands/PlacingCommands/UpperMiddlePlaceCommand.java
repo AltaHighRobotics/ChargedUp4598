@@ -35,7 +35,7 @@ public class UpperMiddlePlaceCommand extends CommandBase {
     m_armAndClawSub = armAndClawSub;
     m_vision = vision;
 
-    autoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.MIDDLE_VERTICAL_SETPOINT, Constants.MIDDLE_HORIZONTAL_SETPOINT);
+    autoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.MIDDLE_VERTICAL_SETPOINT, Constants.MIDDLE_HORIZONTAL_SETPOINT, true);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveTrainSub, m_armAndClawSub, m_vision);
@@ -47,7 +47,7 @@ public class UpperMiddlePlaceCommand extends CommandBase {
     m_vision.setLimelightPipeline(Constants.LIMELIGHT_APRIL_TAG_PIPELINE);
     shouldEnd = !m_vision.isTargetFound();
     autoAlignment.reset();
-    stage = 1;
+    stage = 0;
 
     startTime = 0;
     m_armAndClawSub.clawClose();
@@ -70,8 +70,7 @@ public class UpperMiddlePlaceCommand extends CommandBase {
       case 1: // Raise arm to position.
         m_armAndClawSub.armHigher();
 
-        if (m_armAndClawSub.getBigArmErrorAbs() <= Constants.BIG_ARM_THRESHOLD && m_armAndClawSub.getSmallArmErrorAbs() <= Constants.SMALL_ARM_THRESHOLD &&
-        m_armAndClawSub.atLastPosition()) {
+        if (m_armAndClawSub.isAtFinalPosition()) {
           stage = 2;
         }
 
