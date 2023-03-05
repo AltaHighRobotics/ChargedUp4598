@@ -99,7 +99,7 @@ public final class Constants {
 
     // Limelight.
     public static final PIDConfiguration LIMELIGHT_HORIZONTAL_PID = new PIDConfiguration(0.03, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
-    public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.03, 0.00007, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration LIMELIGHT_VERTICAL_PID = new PIDConfiguration(0.09, 0.00015, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final PIDConfiguration REFLECTIVE_LIMELIGHT_VERTICAL_PID = new PIDConfiguration(1.0, 0.005, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
 
     public static final double LIMELIGHT_VERTICAL_SETPOINT = 0.0;
@@ -112,29 +112,35 @@ public final class Constants {
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
     public static final double BALANCE_AUTO_DISTANCE = 2.0;
     public static final double BALANCE_AUTO_THRESHOLD = 0.0;
+    public static final double DISTANCE_THRESHOLD = 0.75;
+    public static final double AUTO_ONE_DISTANCE = 3.5;
 
-    public static final double DRIVE_BACK_VERTICAL_SETPOINT = 0.227;
-    public static final double DRIVE_BACK_HORIZONTAL_SETPOINT = -3.89;
+    //old value for vertical setpoint 0.227
+    public static final double DRIVE_BACK_VERTICAL_SETPOINT = 0.350;
+    //old value for horizontal setpoint -3.89 -0.96
+    public static final double DRIVE_BACK_HORIZONTAL_SETPOINT = -7.800;
 
     //Placing Command
     public static final int STOP_PLACE_COMMAND_BUTTON = XBOX_X_BUTTON;
     public static final long WAIT_TIME = 500;
 
-    public static final double LEFT_VERTICAL_SETPOINT = 0.225;
-    public static final double LEFT_HORIZONTAL_SETPOINT = -10.48;
+    public static final double LEFT_VERTICAL_SETPOINT = 0.64;
+    public static final double LEFT_HORIZONTAL_SETPOINT = -9;
 
     public static final double MIDDLE_VERTICAL_SETPOINT = 9.0;
-    public static final double MIDDLE_HORIZONTAL_SETPOINT = -3.89;
+    public static final double MIDDLE_HORIZONTAL_SETPOINT = -7.800;
 
-    public static final double RIGHT_VERTICAL_SETPOINT = 0.225;
-    public static final double RIGHT_HORIZONTAL_SETPOINT = -10.48;
+    public static final double RIGHT_VERTICAL_SETPOINT = 0.64;
+    public static final double RIGHT_HORIZONTAL_SETPOINT = -9;
 
     // Auto alignment.
-    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 1.0;
+
+    // old values: 1.0, 1.0
+    public static final double AUTO_ALIGNMENT_VERTICAL_THRESHOLD = 0.4;
     public static final double AUTO_ALIGNMENT_HORIZONTAL_THRESHOLD = 1.0;
 
-    public static final double AUTO_ALIGNMENT_REFLECTIVE_VERTICAL_THRESHOLD = 0.08;
-    public static final double AUTO_ALIGNMENT_REFLECTIVE_HORIZONTAL_THRESHOLD = 0.5;
+    public static final double AUTO_ALIGNMENT_REFLECTIVE_VERTICAL_THRESHOLD = 0.1;
+    public static final double AUTO_ALIGNMENT_REFLECTIVE_HORIZONTAL_THRESHOLD = 1;
 
     //0.227
 

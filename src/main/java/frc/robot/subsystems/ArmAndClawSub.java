@@ -354,7 +354,7 @@ public class ArmAndClawSub extends SubsystemBase {
     }
 
     setBigArmSetPoint(-37849.0);
-    setSmallArmSetPoint(10241.0);
+    setSmallArmSetPoint(9200.0);
     SmartDashboard.putString("Arm position", "grab");
     positioningOrder = PositioningOrders.BIG_ARM_FIRST;
     clearPositions();
@@ -414,9 +414,9 @@ public class ArmAndClawSub extends SubsystemBase {
     if (lastPositionOption == ArmPositionOptions.REST) {
       return;
     }
-
     setBigArmSetPoint(8972.0);
-    setSmallArmSetPoint(16821.0);
+    //old small arm 16821.0
+    setSmallArmSetPoint(23221.0);
     SmartDashboard.putString("Arm position", "rest");
     positioningOrder = PositioningOrders.SAME_TIME;
     clearPositions();

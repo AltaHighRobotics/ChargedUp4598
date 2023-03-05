@@ -25,8 +25,11 @@ public class Autonomous1Command extends CommandBase {
 
   private AutoAlignment autoAlignment;
   private AutoAlignment driveBackAutoAlignment;
+  private ConfigurablePID distancePid;
 
   private long startTime;
+
+  private double speed;
 
   private int stage;
 
@@ -37,6 +40,8 @@ public class Autonomous1Command extends CommandBase {
 
     autoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.MIDDLE_VERTICAL_SETPOINT, Constants.MIDDLE_HORIZONTAL_SETPOINT, true);
     driveBackAutoAlignment = new AutoAlignment(m_driveTrainSub, m_vision, Constants.DRIVE_BACK_VERTICAL_SETPOINT, Constants.DRIVE_BACK_HORIZONTAL_SETPOINT, true);
+
+    distancePid = new ConfigurablePID(Constants.AUTONOMOUS_DISTANCE_PID);
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveTrainSub, m_armAndClawSub, m_vision);
@@ -51,6 +56,9 @@ public class Autonomous1Command extends CommandBase {
 
     autoAlignment.reset();
     driveBackAutoAlignment.reset();
+    distancePid.resetValues();
+
+    m_driveTrainSub.resetWheelEncoders();
 
     stage = 0;
 
@@ -63,56 +71,32 @@ public class Autonomous1Command extends CommandBase {
     // 20.5 deg vertical field of view.
     // FIX MAGIC NUMBERS
     switch (stage) {
-      case 0: // Go to arm rest position.
+      case 0: // claw close and arm rest
+        m_armAndClawSub.clawClose();
         m_armAndClawSub.armRest();
-
-        if (m_armAndClawSub.isAtFinalPosition()) {
-          stage = 1;
-        }
-        
-        break;
-      case 1: // Open claw and go to grab position.
-        m_armAndClawSub.clawOpen();
-        m_armAndClawSub.armGrab();
 
         if (m_armAndClawSub.isAtFinalPosition()) {
           stage = 2;
         }
-        
+      
         break;
-      case 2: // Close claw and wait.
-        m_armAndClawSub.clawClose();
-
-        // Get start time.
-        if (startTime == 0) {
-          startTime = System.currentTimeMillis();
-        }
-
-        // Next stage.
-        if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
-          stage = 3;
-          startTime = 0; // Reset start time.
-        }
-
-        break;
-      case 3: // Align robot with target and arm rest.
-        m_armAndClawSub.armRest();
+      case 1: // Align robot with target.
         atPosition = autoAlignment.run();
 
         if (atPosition) {
-          stage = 4;
+          stage = 2;
         }
 
         break;
-      case 4: // Raise arm to position.
+      case 2: // Raise arm to position.
         m_armAndClawSub.armHigher();
 
         if (m_armAndClawSub.isAtFinalPosition()) {
-          stage = 5;
+          stage = 3;
         }
 
         break;
-      case 5: // Open claw and wait for it.
+      case 3: // Open claw and wait for it.
         m_armAndClawSub.clawOpen();
 
         // Get start time.
@@ -122,16 +106,24 @@ public class Autonomous1Command extends CommandBase {
 
         // Next stage.
         if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
-          stage = 6;
+          stage = 4;
         }
 
         break;
-      case 6: // Drive back and arm rest.
+      case 4: // Drive back and arm rest.
         m_armAndClawSub.armRest();
         atPosition = driveBackAutoAlignment.run();
 
+        // Set speed.
+        /*
+        speed = distancePid.runPID(Constants.AUTO_ONE_DISTANCE, m_driveTrainSub.getAvgWheelEncoder());
+        m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false, false);
+        atPosition = Math.abs(Constants.AUTO_ONE_DISTANCE - m_driveTrainSub.getAvgWheelEncoder()) <= Constants.DISTANCE_THRESHOLD;
+        */
+
         if (atPosition && m_armAndClawSub.isAtFinalPosition()) {
-          stage = 7;
+          stage = 5;
+          m_driveTrainSub.stop();
         }
 
         break;

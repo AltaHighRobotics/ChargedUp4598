@@ -51,7 +51,6 @@ public class RobotContainer {
   private final OpenClawCommand m_openClawCommand = new OpenClawCommand(m_armAndClawSub);
   private final CloseClawCommand m_CloseClawCommand = new CloseClawCommand(m_armAndClawSub);
   private final ClawOpenAndCloseCommand m_clawOpenAndCloseCommand = new ClawOpenAndCloseCommand(m_armAndClawSub);
-  private final ArmMiddlePositionCommand m_armMiddlePositionCommand = new ArmMiddlePositionCommand(m_armAndClawSub);
   private final LowerSmallArmCommand m_lowerSmallArmCommand = new LowerSmallArmCommand(m_armAndClawSub);
   private final ArmRestPositionCommand m_armRestPositionCommand = new ArmRestPositionCommand(m_armAndClawSub);
   private final AprilTagTestCommand m_AprilTagTestCommand = new AprilTagTestCommand(m_Vision);
@@ -70,9 +69,13 @@ public class RobotContainer {
   private final UpperMiddlePlaceCommand m_UpperMiddlePlaceCommand = new UpperMiddlePlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
   private final UpperRightPlaceCommand m_UpperRightPlaceCommand = new UpperRightPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
 
+  // Position commands.
+  private final ArmHigherPositionCommand m_armHigherPositionCommand = new ArmHigherPositionCommand(m_armAndClawSub);
+  private final ArmMiddlePositionCommand m_armMiddlePositionCommand = new ArmMiddlePositionCommand(m_armAndClawSub);
 
   // Autonomous.
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
+  private final Autonomous1Command m_autonomous1Command = new Autonomous1Command(m_driveTrainSub, m_armAndClawSub, m_Vision);
 
   // Arm positions.
   //private final ArmMiddlePositionCommand
@@ -128,8 +131,10 @@ public class RobotContainer {
     middleLeftButton.onTrue(m_CenterLeftPlaceCommand);
     middleCenterButton.onTrue(m_CenterMiddlePlaceCommand);
     middleRightButton.onTrue(m_CenterRightPlaceCommand);
-    //bottomLeftButton.onTrue(m_LowerLeftPlaceCommand);
-    //bottomCenterButton.onTrue(m_LowerMiddlePlaceCommand);
+
+    // Changed for arm postion commands (---:
+    bottomLeftButton.onTrue(m_armHigherPositionCommand);
+    bottomCenterButton.onTrue(m_armMiddlePositionCommand);
     //bottomRightButton.onTrue(m_LowerRightPlaceCommand);
 
   }
@@ -141,6 +146,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return m_autonomous1Command;
   }
 }
