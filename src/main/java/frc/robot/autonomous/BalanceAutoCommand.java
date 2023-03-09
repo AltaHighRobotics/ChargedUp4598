@@ -14,7 +14,6 @@ public class BalanceAutoCommand extends CommandBase {
   /** Creates a new BalanceAutoCommand. */
   private DriveTrainSub m_driveTrainSub;
 
-  private ConfigurablePID distancePid;
   private ConfigurablePID balancePid;
 
   private int stage;
@@ -25,7 +24,6 @@ public class BalanceAutoCommand extends CommandBase {
   public BalanceAutoCommand(DriveTrainSub driveTrainSub) {
     m_driveTrainSub = driveTrainSub;
 
-    distancePid = new ConfigurablePID(Constants.AUTONOMOUS_DISTANCE_PID);
     balancePid = new ConfigurablePID(Constants.AUTONOMOUS_BALANCE_PID);
 
     addRequirements(m_driveTrainSub);
@@ -38,7 +36,6 @@ public class BalanceAutoCommand extends CommandBase {
     stage = 0;
     finished = false;
 
-    distancePid.resetValues();
     balancePid.resetValues();
 
     m_driveTrainSub.resetWheelEncoders();
@@ -49,11 +46,11 @@ public class BalanceAutoCommand extends CommandBase {
   public void execute() {
     switch (stage) {
       case 0: // Drive to platform.
-        speed = distancePid.runPID(Constants.BALANCE_AUTO_DISTANCE, m_driveTrainSub.getAvgWheelEncoder());
+        speed = Constants.BALANCE_AUTO_SPEED;
         m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false, false);
 
         // Next stage
-        if (Math.abs(distancePid.getError()) <= Constants.BALANCE_AUTO_THRESHOLD) {
+        if (Math.abs(m_driveTrainSub.getPitch()) >= Constants.BALANCE_AUTO_DRIVE_TO_ANGLE) {
           stage = 1;
           m_driveTrainSub.stop();
         }

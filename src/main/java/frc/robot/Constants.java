@@ -110,10 +110,8 @@ public final class Constants {
     // Autonomous.
     public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.08, 0.00035, 0.005, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.25, 0.25);
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
-    public static final double BALANCE_AUTO_DISTANCE = 2.0;
-    public static final double BALANCE_AUTO_THRESHOLD = 0.0;
-    public static final double DISTANCE_THRESHOLD = 0.75;
-    public static final double AUTO_ONE_DISTANCE = 3.5;
+    public static final double BALANCE_AUTO_DRIVE_TO_ANGLE = 15.0;
+    public static final double BALANCE_AUTO_SPEED = 0.2;
 
     //old value for vertical setpoint 0.227
     public static final double DRIVE_BACK_VERTICAL_SETPOINT = 0.350;
