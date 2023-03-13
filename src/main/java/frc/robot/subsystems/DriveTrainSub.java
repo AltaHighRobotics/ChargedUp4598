@@ -13,10 +13,14 @@ import utilities.SwerveModule;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C.Port;
 import java.util.Vector;
+
+import javax.crypto.spec.ChaCha20ParameterSpec;
+
 import java.lang.Math;
 import utilities.AS5600Encoder;
 import utilities.MathTools;
 import edu.wpi.first.wpilibj.I2C;
+import utilities.CartesianVector;
 
 // Usefull https://compendium.readthedocs.io/en/latest/tasks/drivetrains/swerve.html
 
@@ -25,13 +29,55 @@ public class DriveTrainSub extends SubsystemBase {
   private SwerveModule[] swerveModuleSubs = new SwerveModule[Constants.SWERVE_MODULE_COUNT];
   private AHRS navx;
 
+  private CartesianVector position;
+  private CartesianVector oldPosition;
+
+  // Module position and speed stuff.
+  public class ModuleData {
+    public double distance;
+    public double angle;
+
+    public CartesianVector position; // Its position on robot.
+    public double rate;
+
+    public ModuleData(double distance, double angle, CartesianVector position) {
+      this.distance = distance;
+      this.angle = angle;
+      this.position = position;
+    }
+
+    public ModuleData clone() {
+      ModuleData clonedModule = new ModuleData(distance, angle, position);
+      clonedModule.rate = rate;
+      return clonedModule;
+    }
+  }
+
+  private ModuleData[] moduleData = new ModuleData[Constants.SWERVE_MODULE_COUNT];
+  private ModuleData[] oldModuleData = new ModuleData[Constants.SWERVE_MODULE_COUNT];
+
   public DriveTrainSub() {
     int i;
 
-    // Config swerve modules.
+    // Config swerve modules and module data.
     for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
       swerveModuleSubs[i] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[i]);
+      moduleData[i] = new ModuleData(0.0, 0.0, null);
     }
+
+    // Set module positions.
+    double robotWidth, robotHeight;
+    robotWidth = Constants.VEHICLE_WHEELBASE / 2;
+    robotHeight = Constants.VEHICLE_TRACKWIDTH / 2;
+
+    moduleData[Constants.FRONT_RIGHT_MODULE].position = new CartesianVector(robotWidth, robotHeight);
+    moduleData[Constants.FRONT_LEFT_MODULE].position = new CartesianVector(-robotWidth, robotHeight);
+    moduleData[Constants.BACK_RIGHT_MODULE].position = new CartesianVector(robotWidth, -robotHeight);
+    moduleData[Constants.BACK_LEFT_MODULE].position = new CartesianVector(-robotWidth, -robotHeight);
+
+    // Position and speed.
+    position = new CartesianVector(0.0, 0.0);
+    oldPosition = new CartesianVector(0.0, 0.0);
 
     navx = new AHRS(Port.kMXP);
     resetGyro();
@@ -162,6 +208,34 @@ public class DriveTrainSub extends SubsystemBase {
     return normalizedSpeeds;
   }
 
+  public void updatePosition() {
+    int i;
+    double radians;
+    double distance = 0.0;
+
+    // Save old position.
+    oldPosition = position.clone();
+
+    // Calculate each module.
+    for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+      // Save old module data.
+      oldModuleData[i] = moduleData[i].clone();
+
+      // Get distance and angle.
+      moduleData[i].distance = getSwerveModuleFromId(i).getDistance();
+      moduleData[i].angle = getSwerveModuleFromId(i).getAngle();
+      moduleData[i].rate = moduleData[i].distance - oldModuleData[i].distance;
+
+      distance += moduleData[i].rate;
+    }
+
+    distance /= Constants.SWERVE_MODULE_COUNT;
+    radians = Math.toRadians(getYaw());
+
+    position.x += distance * Math.cos(radians);
+    position.y += distance * Math.sin(radians);
+  }
+
   public void run() {
     // Run the swerve module run methods.
     for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
@@ -175,6 +249,8 @@ public class DriveTrainSub extends SubsystemBase {
     SmartDashboard.putNumber("Back right distance", getSwerveModuleFromId(Constants.BACK_RIGHT_MODULE).getDistance());
     SmartDashboard.putNumber("Back left distance", getSwerveModuleFromId(Constants.BACK_LEFT_MODULE).getDistance());
     SmartDashboard.putNumber("Avg distance", getAvgWheelEncoder());
+    SmartDashboard.putNumber("Pitch", getPitch());
+    SmartDashboard.putNumber("Roll", getRoll());
   }
 
   // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf

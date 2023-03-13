@@ -11,10 +11,16 @@ import java.util.Vector;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.revrobotics.CANSparkMax;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import utilities.ConfigurablePID;
 import frc.robot.Constants;
@@ -22,7 +28,10 @@ import frc.robot.Constants;
 public class ArmAndClawSub extends SubsystemBase {
   /** Creates a new ArmAndClawSub. */
   private Solenoid clawPiston1;
-  private Solenoid clawPiston2;
+  
+  private WPI_VictorSPX clawMotorOne;
+  private CANSparkMax clawMotorTwo;
+  private RelativeEncoder clawTwoEncoder;
 
   private WPI_TalonFX smallArmMotor;
   private StatorCurrentLimitConfiguration smallArmMotorCurrentLimit;
@@ -40,6 +49,12 @@ public class ArmAndClawSub extends SubsystemBase {
 
   private double smallArmEncoderOffset = 0.0;
   private double bigArmEncoderOffset = 0.0;
+
+  private ConfigurablePID clawOnePid;
+  private ConfigurablePID clawTwoPid;
+
+  private double clawOneSetpoint = 0.0;
+  private double clawTwoSetpoint = 0.0;
 
   enum PositioningOrders {
     SAME_TIME,
@@ -102,6 +117,16 @@ public class ArmAndClawSub extends SubsystemBase {
     smallArmMotor.setNeutralMode(NeutralMode.Brake);
     smallArmMotor.setInverted(TalonFXInvertType.Clockwise);
 
+    // Claw motors.
+    clawMotorOne = new WPI_VictorSPX(Constants.CLAW_MOTOR_ONE);
+    clawMotorTwo = new CANSparkMax(Constants.CLAW_MOTOR_TWO, CANSparkMaxLowLevel.MotorType.kBrushless);
+
+    // Claw encoders.
+    clawTwoEncoder = clawMotorTwo.getEncoder();
+
+    resetClawOneEncoder();
+    resetClawTwoEncoder();
+
     // build team issue!!!
 
     // Limit swich
@@ -111,8 +136,56 @@ public class ArmAndClawSub extends SubsystemBase {
     smallArmPid = new ConfigurablePID(Constants.SMALL_ARM_PID);
     bigArmPid = new ConfigurablePID(Constants.BIG_ARM_PID);
 
+    clawOnePid = new ConfigurablePID(Constants.CLAW_ONE_PID);
+    clawTwoPid = new ConfigurablePID(Constants.CLAW_TWO_PID);
+
     resetBigArmEncoder();
     resetSmallArmEncoder();
+  }
+
+  public void resetClawOneEncoder() {
+    clawMotorOne.setSelectedSensorPosition(0.0);
+  }
+
+  public void resetClawTwoEncoder() {
+    clawTwoEncoder.setPosition(0.0);
+  }
+
+  public void setClawOneMotor(double power) {
+    clawMotorOne.set(VictorSPXControlMode.PercentOutput, power);
+  }
+
+  public void setClawTwoMotor(double power) {
+    clawMotorTwo.set(power);
+  }
+
+  public void stopClawOneMotor() {
+    clawMotorOne.neutralOutput();
+  }
+
+  public void stopClawTwoMotor() {
+    clawMotorTwo.stopMotor();
+  }
+
+  public void stopClawMotors() {
+    stopClawOneMotor();
+    stopClawTwoMotor();
+  }
+
+  public double getClawOnePosition() {
+    return clawMotorOne.getSelectedSensorPosition();
+  }
+
+  public double getClawTwoPosition() {
+    return clawTwoEncoder.getPosition();
+  }
+
+  public void setClawOneSetpoint(double setpoint) {
+    clawOneSetpoint = setpoint;
+  }
+
+  public void setClawTwoSetpoint(double setpoint) {
+    clawTwoSetpoint = setpoint;
   }
 
   public boolean getLimitSwitchValue() {
@@ -205,6 +278,7 @@ public class ArmAndClawSub extends SubsystemBase {
   public void run() {
     updatePositions();
     runArmPids();
+    runClawPids();
 
     SmartDashboard.putNumber("Big arm setpoint", bigArmSetPoint);
     SmartDashboard.putNumber("Small arm setpoint", smallArmSetPoint);
@@ -214,6 +288,11 @@ public class ArmAndClawSub extends SubsystemBase {
     SmartDashboard.putNumber("Small arm position", getSmallArmPosition());
     SmartDashboard.putNumber("Big arm position", getBigArmPosition());
     SmartDashboard.putNumber("Arm Positions count", armPositions.size());
+  }
+
+  private void runClawPids() {
+    setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+    setClawTwoMotor(clawTwoPid.runPID(clawTwoSetpoint, getClawTwoPosition()));
   }
 
   private void runArmPids() {

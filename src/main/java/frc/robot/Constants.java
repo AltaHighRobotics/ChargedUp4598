@@ -78,10 +78,16 @@ public final class Constants {
     public static final int MIDDLE_RIGHT_BUTTON = 4;
     public static final int TOP_RIGHT_BUTTON = 3;
 
-
     //Pistons.
     public static final int CLAW_PISTON_1 = 0;//Change later.
     public static final int CLAW_PISTON_2 = 0;//Change later.
+
+    // Claw.
+    public static final int CLAW_MOTOR_ONE = 0;
+    public static final int CLAW_MOTOR_TWO = 0;
+
+    public static final PIDConfiguration CLAW_ONE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration CLAW_TWO_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     
     // Arm.
     public static final int SMALL_ARM_MOTOR = 11;//Change later.
@@ -109,8 +115,8 @@ public final class Constants {
 
     // Autonomous.
     public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.08, 0.00035, 0.005, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.25, 0.25);
-    public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 1.0);
-    public static final double BALANCE_AUTO_DRIVE_TO_ANGLE = 15.0;
+    public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(-0.0001, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.25, 0.25);
+    public static final double BALANCE_AUTO_DRIVE_TO_ANGLE = 12.0;
     public static final double BALANCE_AUTO_SPEED = 0.2;
 
     //old value for vertical setpoint 0.227
