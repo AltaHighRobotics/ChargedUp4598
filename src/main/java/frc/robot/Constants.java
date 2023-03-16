@@ -4,6 +4,7 @@
 
 package frc.robot;
 import utilities.PIDConfiguration;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import utilities.SwerveModuleConfig;
 
 /**
@@ -16,7 +17,7 @@ import utilities.SwerveModuleConfig;
  */
 public final class Constants {
     // Speed.
-    public static final double DRIVE_SPEED = 0.5; //0.25
+    public static final double DRIVE_SPEED = 0.8; //0.25
     public static final double SMALL_ARM_LOWER_SPEED = -0.15;
     
     // Swerve module.
@@ -24,6 +25,7 @@ public final class Constants {
     public static final double SWERVE_MODULE_WHEEL_CIRCUMFERENCE = 0.3092112569295754; // Meters
     public static final double SWERVE_MODULE_WHEEL_ENCODER_DISTANCE_PER_PULSE = 2.3486098074077995e-05; // 2048 steps per rotation
     // (7/45) / 2048 * 0.3092112569295754 for the number up there ^
+    public static final StatorCurrentLimitConfiguration SWERVE_MODULE_WHEEL_CURRENT_LIMIT = new StatorCurrentLimitConfiguration(true, 50.0, 0.0, 0.0);
 
     //public static final PIDConfiguration SWERVE_MODULE_WHEEL_PID = new PIDConfiguration(0.04, 0.0038, 0.004, 0.0, 0, 0, 0, 0, 0, 0, 0, 0.0, 1.0);
     //public static final PIDConfiguration SWERVE_MODULE_TURN_PID = new PIDConfiguration(0.014, 0.0000002, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, -0.15, 0.15);

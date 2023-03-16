@@ -14,6 +14,8 @@ import frc.robot.commands.PlacingCommands.CenterMiddlePlaceCommand;
 import frc.robot.commands.PlacingCommands.CenterRightPlaceCommand;
 import frc.robot.commands.PlacingCommands.LowerLeftPlaceCommand;
 import frc.robot.commands.PlacingCommands.LowerMiddlePlaceCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.PlacingCommands.LowerRightPlaceCommand;
 import frc.robot.commands.PlacingCommands.UpperLeftPlaceCommand;
 import frc.robot.commands.PlacingCommands.UpperMiddlePlaceCommand;
@@ -77,12 +79,20 @@ public class RobotContainer {
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
   private final Autonomous1Command m_autonomous1Command = new Autonomous1Command(m_driveTrainSub, m_armAndClawSub, m_Vision);
 
+  private final SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
+
   // Arm positions.
   //private final ArmMiddlePositionCommand
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
+
+    // Autonomous chooser.
+    m_autonomousChooser.setDefaultOption("Grab and drive back", m_autonomous1Command);
+    m_autonomousChooser.addOption("Balance", m_balanceAutoCommand);
+    SmartDashboard.putData(m_autonomousChooser);
+
     configureButtonBindings();
     CommandScheduler.getInstance().setDefaultCommand(m_driveTrainSub, m_driveCommand);
   }

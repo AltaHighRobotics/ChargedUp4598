@@ -49,6 +49,7 @@ public class SwerveModule {
     wheelMotor.setInverted(config.invertWheelMotor);
     wheelMotor.setNeutralMode(NeutralMode.Coast);
     wheelMotor.setSensorPhase(configuration.invertWheelMotor);
+    wheelMotor.configStatorCurrentLimit(Constants.SWERVE_MODULE_WHEEL_CURRENT_LIMIT);
     resetWheelEncoder();
 
     // Turn motor.
