@@ -87,6 +87,8 @@ public final class Constants {
     // Claw.
     public static final int CLAW_MOTOR_ONE = 0;
     public static final int CLAW_MOTOR_TWO = 0;
+    public static final int CLAW_ENCODER_A = 0;
+    public static final int CLAW_ENCODER_B = 0;
 
     public static final PIDConfiguration CLAW_ONE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final PIDConfiguration CLAW_TWO_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);

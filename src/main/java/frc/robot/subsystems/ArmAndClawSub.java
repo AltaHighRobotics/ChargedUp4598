@@ -11,6 +11,7 @@ import java.util.Vector;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.revrobotics.CANSparkMax;
@@ -20,17 +21,22 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalSource;
+import edu.wpi.first.wpilibj.DigitalInput;
 import utilities.ConfigurablePID;
+import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.Constants;
 
 public class ArmAndClawSub extends SubsystemBase {
   /** Creates a new ArmAndClawSub. */
   private Solenoid clawPiston1;
   
-  private WPI_VictorSPX clawMotorOne;
+  private WPI_TalonSRX clawMotorOne;
   private CANSparkMax clawMotorTwo;
+  private Encoder clawOneEncoder;
   private RelativeEncoder clawTwoEncoder;
 
   private WPI_TalonFX smallArmMotor;
@@ -118,10 +124,16 @@ public class ArmAndClawSub extends SubsystemBase {
     smallArmMotor.setInverted(TalonFXInvertType.Clockwise);
 
     // Claw motors.
-    clawMotorOne = new WPI_VictorSPX(Constants.CLAW_MOTOR_ONE);
+    clawMotorOne = new WPI_TalonSRX(Constants.CLAW_MOTOR_ONE);
     clawMotorTwo = new CANSparkMax(Constants.CLAW_MOTOR_TWO, CANSparkMaxLowLevel.MotorType.kBrushless);
 
     // Claw encoders.
+    clawOneEncoder = new Encoder(
+      new DigitalInput(Constants.CLAW_ENCODER_A),
+      new DigitalInput(Constants.CLAW_ENCODER_B),
+      false
+    );
+
     clawTwoEncoder = clawMotorTwo.getEncoder();
 
     resetClawOneEncoder();
@@ -144,7 +156,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void resetClawOneEncoder() {
-    clawMotorOne.setSelectedSensorPosition(0.0);
+    clawOneEncoder.reset();
   }
 
   public void resetClawTwoEncoder() {
@@ -152,7 +164,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void setClawOneMotor(double power) {
-    clawMotorOne.set(VictorSPXControlMode.PercentOutput, power);
+    clawMotorOne.set(TalonSRXControlMode.PercentOutput, power);
   }
 
   public void setClawTwoMotor(double power) {
@@ -173,7 +185,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public double getClawOnePosition() {
-    return clawMotorOne.getSelectedSensorPosition();
+    return clawOneEncoder.getDistance();
   }
 
   public double getClawTwoPosition() {
