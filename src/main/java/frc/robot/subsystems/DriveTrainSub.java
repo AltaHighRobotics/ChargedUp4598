@@ -60,7 +60,7 @@ public class DriveTrainSub extends SubsystemBase {
     int i;
 
     // Config swerve modules and module data.
-    for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       swerveModuleSubs[i] = new SwerveModule(Constants.SWERVE_MODULE_CONFIGS[i]);
       moduleData[i] = new ModuleData(0.0, 0.0, null);
     }
@@ -89,13 +89,13 @@ public class DriveTrainSub extends SubsystemBase {
   }
 
   public void resetWheelEncoders() {
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       swerveModuleSubs[i].resetWheelEncoder();
     }
   }
 
   public void resetTurnEncoders() {
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       swerveModuleSubs[i].resetTurnEncoder();
     }
   }
@@ -103,7 +103,7 @@ public class DriveTrainSub extends SubsystemBase {
   public double getAvgWheelEncoder() {
     double avg = 0.0;
 
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       avg += swerveModuleSubs[i].getDistance();
     }
 
@@ -132,13 +132,13 @@ public class DriveTrainSub extends SubsystemBase {
   }
 
   public void stopTurn() {
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       swerveModuleSubs[i].stopTurnMotor();
     }
   }
 
   public void stopDrive() {
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       swerveModuleSubs[i].stopWheelMotor();
     }
   }
@@ -146,7 +146,7 @@ public class DriveTrainSub extends SubsystemBase {
   public int numberOfMoulesAtSpeed() {
     int count = 0;
 
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       count += swerveModuleSubs[i].atSpeed() ? 1 : 0;
     }
 
@@ -156,7 +156,7 @@ public class DriveTrainSub extends SubsystemBase {
   public int numberOfMoulesAtAngle() {
     int count = 0;
 
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       count += swerveModuleSubs[i].atAngle() ? 1 : 0;
     }
 
@@ -201,7 +201,7 @@ public class DriveTrainSub extends SubsystemBase {
     }
 
     // Normalize.
-    for (i = 0; i < normalizedSpeeds.length; i++) {
+    for (i = 0; i < normalizedSpeeds.length; ++i) {
       normalizedSpeeds[i] /= max;
     }
 
@@ -217,7 +217,7 @@ public class DriveTrainSub extends SubsystemBase {
     oldPosition = position.clone();
 
     // Calculate each module.
-    for (i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       // Save old module data.
       oldModuleData[i] = moduleData[i].clone();
 
@@ -238,7 +238,7 @@ public class DriveTrainSub extends SubsystemBase {
 
   public void run() {
     // Run the swerve module run methods.
-    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; i++) {
+    for (int i = 0; i < Constants.SWERVE_MODULE_COUNT; ++i) {
       swerveModuleSubs[i].run();
     }
 
@@ -301,7 +301,7 @@ public class DriveTrainSub extends SubsystemBase {
     moduleSpeeds = normalizeSpeeds(moduleSpeeds);
 
     // Set speed and angle of each module.
-    for (i = 0; i < moduleSpeeds.length; i++) {
+    for (i = 0; i < moduleSpeeds.length; ++i) {
       // Covert angle unit.
       moduleAngles[i] = MathTools.makeNonNegAngle(Math.toDegrees(moduleAngles[i]));
 
