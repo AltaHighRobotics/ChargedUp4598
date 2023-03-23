@@ -85,8 +85,8 @@ public final class Constants {
     public static final int CLAW_PISTON_2 = 0;//Change later.
 
     // Claw.
-    public static final int CLAW_MOTOR_ONE = 0;
-    public static final int CLAW_MOTOR_TWO = 0;
+    public static final int CLAW_MOTOR_ONE = 16;
+    public static final int CLAW_MOTOR_TWO = 15;
     public static final int CLAW_ENCODER_A = 0;
     public static final int CLAW_ENCODER_B = 0;
 
