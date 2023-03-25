@@ -59,6 +59,9 @@ public class RobotContainer {
   private final AprilTagToggleCommand m_AprilTagToggleCommand = new AprilTagToggleCommand(m_Vision);
   private final TogglePipelineCommand m_TogglePipelineCommand = new TogglePipelineCommand(m_Vision);
   private final ArmGrabPositionCommand m_armGrabPositionCommand = new ArmGrabPositionCommand(m_armAndClawSub);
+  private final ClawUpCommand m_ClawUpCommand = new ClawUpCommand(m_armAndClawSub);
+  private final ClawDownCommand m_ClawDownCommand = new ClawDownCommand(m_armAndClawSub);
+  private final ZeroClawCommand m_zeroClawCommand = new ZeroClawCommand(m_armAndClawSub);
 
   //Placing Commands
   private final CenterLeftPlaceCommand m_CenterLeftPlaceCommand = new CenterLeftPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
@@ -74,6 +77,8 @@ public class RobotContainer {
   // Position commands.
   private final ArmHigherPositionCommand m_armHigherPositionCommand = new ArmHigherPositionCommand(m_armAndClawSub);
   private final ArmMiddlePositionCommand m_armMiddlePositionCommand = new ArmMiddlePositionCommand(m_armAndClawSub);
+  private final ArmHighGrabPositionCommand m_ArmHighGrabPositionCommand = new ArmHighGrabPositionCommand(m_armAndClawSub);
+  private final ArmGrabPositionCommand m_ArmGrabPositionCommand = new ArmGrabPositionCommand(m_armAndClawSub);
 
   // Autonomous.
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
@@ -106,16 +111,18 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Set buttons.
     final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_Y_BUTTON);
-    final JoystickButton openAndCloseClawButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
-    final JoystickButton armGradButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
-    final JoystickButton restPositionButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
-    final JoystickButton limeLightTestButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
+    final JoystickButton lowGrabButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    final JoystickButton highGrabButton = new JoystickButton(m_driveController, Constants.XBOX_B_BUTTON);
+    final JoystickButton wristDownButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
+    final JoystickButton wristUpButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
+    //final JoystickButton limeLightTestButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     final JoystickButton limeLightToggleButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
 
     zeroAngleButton.whenPressed(m_zeroAngleCommand);
-    openAndCloseClawButton.onTrue(m_clawOpenAndCloseCommand);
-    armGradButton.onTrue(m_armGrabPositionCommand);
-    restPositionButton.onTrue(m_armRestPositionCommand);
+    lowGrabButton.onTrue(m_armGrabPositionCommand);
+    highGrabButton.onTrue(m_ArmHighGrabPositionCommand);
+    wristDownButton.whileTrue(m_ClawDownCommand);
+    wristUpButton.whileTrue(m_ClawUpCommand);
     //limeLightTestButton.whileTrue(m_AprilTagTestCommand);
     //limeLightToggleButton.onTrue(m_AprilTagToggleCommand);
 
@@ -132,6 +139,10 @@ public class RobotContainer {
     final JoystickButton bottomCenterButton = new JoystickButton(m_ButtonBox, Constants.BOTTOM_CENTER_BUTTON);
     final JoystickButton bottomRightButton = new JoystickButton(m_ButtonBox, Constants.BOTTOM_RIGHT_BUTTON);
 
+
+    // Evil haha.
+    final JoystickButton zeroClawCommand = new JoystickButton(m_ButtonBox, 7);
+    zeroClawCommand.onTrue(m_zeroClawCommand);
 
     toggleButton.onTrue(m_TogglePipelineCommand);
 

@@ -19,6 +19,8 @@ public final class Constants {
     // Speed.
     public static final double DRIVE_SPEED = 0.8; //0.25
     public static final double SMALL_ARM_LOWER_SPEED = -0.15;
+    public static final double CLAW_UP_SPEED = 0.5;
+    public static final double CLAW_DOWN_SPEED = -0.15;
     
     // Swerve module.
     public static final double SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE = 12.600000000000001; // 42 steps per rotation
@@ -90,7 +92,10 @@ public final class Constants {
     public static final int CLAW_ENCODER_A = 0;
     public static final int CLAW_ENCODER_B = 0;
 
-    public static final PIDConfiguration CLAW_ONE_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final double CLAW_ONE_UPPER_LIMIT = -12.0;
+    public static final double CLAW_ONE_LOWER_LIMIT = -4853.0;
+
+    public static final PIDConfiguration CLAW_ONE_PID = new PIDConfiguration(-0.0001, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.7, 0.7);
     public static final PIDConfiguration CLAW_TWO_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     
     // Arm.
@@ -104,7 +109,7 @@ public final class Constants {
     public static final double BIG_ARM_THRESHOLD = 13922.0; // 5000
     public static final double SMALL_ARM_THRESHOLD = 1858; // 500
 
-    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00008, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
+    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00015, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.1, 0.3);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.5);
 
     // Limelight.
