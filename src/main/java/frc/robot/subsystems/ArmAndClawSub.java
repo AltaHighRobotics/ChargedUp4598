@@ -26,9 +26,12 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.DigitalInput;
+import com.revrobotics.CANSparkMax.IdleMode;
 import utilities.ConfigurablePID;
 import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.Constants;
+
+// I am a chuncky anime girl UWU!!!!
 
 public class ArmAndClawSub extends SubsystemBase {
   /** Creates a new ArmAndClawSub. */
@@ -130,6 +133,7 @@ public class ArmAndClawSub extends SubsystemBase {
 
     clawMotorTwo = new CANSparkMax(Constants.CLAW_MOTOR_TWO, CANSparkMaxLowLevel.MotorType.kBrushless);
     clawMotorTwo.setSmartCurrentLimit(Constants.CLAW_MOTOR_TWO_CURRENT_LIMIT);
+    clawMotorTwo.setIdleMode(IdleMode.kCoast);
 
     // Claw encoders.
     clawTwoEncoder = clawMotorTwo.getEncoder();
@@ -339,13 +343,13 @@ public class ArmAndClawSub extends SubsystemBase {
       case SAME_TIME:
         setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
         setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
-        //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+        setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
 
         SmartDashboard.putString("Arm positioning order", "same time");
         break;
       case SMALL_ARM_FIRST:
         setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
-        //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+        setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
 
         if (smallArmAtPosition) {
           setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
@@ -358,7 +362,7 @@ public class ArmAndClawSub extends SubsystemBase {
         break;
       case BIG_ARM_FIRST:
         setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
-        //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+        setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
 
         if (bigArmAtPosition) {
           setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
@@ -374,10 +378,10 @@ public class ArmAndClawSub extends SubsystemBase {
         setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
 
         if (bigArmAtPosition && smallArmAtPosition) {
-          //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+          setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
           positioningOrder = PositioningOrders.SAME_TIME;
         } else {
-          //stopClawOneMotor();
+          stopClawOneMotor();
         }
 
         SmartDashboard.putString("Arm positioning order", "claw last");
@@ -447,20 +451,18 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(-31588.0);
-    setSmallArmSetPoint(-193868.0);
+    //setBigArmSetPoint(28749.000000);
+    //setSmallArmSetPoint(-193868.0);
     setClawOneSetpoint(-945.0);
 
     SmartDashboard.putString("Arm position", "higher cone");
     positioningOrder = PositioningOrders.SAME_TIME;
     clearPositions();
 
-    /*
     Vector<ArmPositioningData> newArmPositions = new Vector<ArmPositioningData>();
-    newArmPositions.add(new ArmPositioningData(55000.0, -4714.0, PositioningOrders.SAME_TIME));
-    newArmPositions.add(new ArmPositioningData(83066.0, 30698.0, PositioningOrders.SAME_TIME));
+    newArmPositions.add(new ArmPositioningData(-193868.0, 0.0, PositioningOrders.SAME_TIME));
+    newArmPositions.add(new ArmPositioningData(-193868.0, 28749.0, PositioningOrders.SAME_TIME));
     setArmPositions(newArmPositions);
-    */
 
     lastPositionOption = ArmPositionOptions.HIGHER_CONE;
   }
@@ -471,7 +473,7 @@ public class ArmAndClawSub extends SubsystemBase {
     }
 
     setBigArmSetPoint(-31588.0);
-    setSmallArmSetPoint(-191836.0);
+    setSmallArmSetPoint(-190000.0);//-191836.0
     setClawOneSetpoint(-358.0);
     
     SmartDashboard.putString("Arm position", "middle cone");
@@ -502,7 +504,7 @@ public class ArmAndClawSub extends SubsystemBase {
     }
 
     setBigArmSetPoint(26587.0);
-    setSmallArmSetPoint(-91019.0); //29970
+    setSmallArmSetPoint(-94019.0); // -91019.0
     setClawOneSetpoint(-4953.0); //-4342.0
     SmartDashboard.putString("Arm position", "higher grab");
     positioningOrder = PositioningOrders.CLAW_LAST;

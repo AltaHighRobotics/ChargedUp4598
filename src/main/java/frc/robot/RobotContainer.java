@@ -63,6 +63,8 @@ public class RobotContainer {
   private final ClawDownCommand m_ClawDownCommand = new ClawDownCommand(m_armAndClawSub);
   private final ZeroClawCommand m_zeroClawCommand = new ZeroClawCommand(m_armAndClawSub);
   private final SpinClawCommand m_spinClawCommand = new SpinClawCommand(m_armAndClawSub);
+  private final ClawIntakeCommand m_ClawIntakeCommand = new ClawIntakeCommand(m_armAndClawSub);
+  private final ClawOutCommand m_clawOutCommand = new ClawOutCommand(m_armAndClawSub);
 
   //Placing Commands
   private final CenterLeftPlaceCommand m_CenterLeftPlaceCommand = new CenterLeftPlaceCommand(m_driveController, m_driveTrainSub, m_armAndClawSub, m_Vision);
@@ -116,15 +118,20 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Set buttons.
     final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_Y_BUTTON);
-    //final JoystickButton lowGrabButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    final JoystickButton clawIntakeButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
+    final JoystickButton clawOutButton = new JoystickButton(m_driveController, Constants.XBOX_B_BUTTON);
     final JoystickButton highGrabButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
     final JoystickButton restButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
+    final JoystickButton zeroClawCommand = new JoystickButton(m_driveController, 7);
+
+    //final JoystickButton lowGrabButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
     //final JoystickButton wristDownButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
     //final JoystickButton wristUpButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     //final JoystickButton limeLightTestButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     //final JoystickButton limeLightToggleButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
-    final JoystickButton spinClawButton = new JoystickButton(m_driveController, Constants.XBOX_X_BUTTON);
-    final JoystickButton zeroClawCommand = new JoystickButton(m_driveController, 7);
+    //final JoystickButton spinClawButton = new JoystickButton(m_driveController, Constants.XBOX_X_BUTTON);
+    //final JoystickButton ClawSpinButton = new JoystickButton(m_driveController, Constants.XBOX_B_BUTTON);
+
 
     zeroAngleButton.whenPressed(m_zeroAngleCommand);
     //lowGrabButton.onTrue(m_armGrabPositionCommand);
@@ -134,8 +141,10 @@ public class RobotContainer {
     //wristUpButton.whileTrue(m_ClawUpCommand);
     //limeLightTestButton.whileTrue(m_AprilTagTestCommand);
     //limeLightToggleButton.onTrue(m_AprilTagToggleCommand);
-    spinClawButton.toggleOnTrue(m_spinClawCommand);
+    //spinClawButton.toggleOnTrue(m_spinClawCommand);
     zeroClawCommand.onTrue(m_zeroClawCommand);
+    clawIntakeButton.whileTrue(m_ClawIntakeCommand);
+    clawOutButton.whileTrue(m_clawOutCommand);
 
     //Button Box Bindings
     final JoystickButton toggleButton = new JoystickButton(m_ButtonBox, Constants.TOGGLE_BUTTON);

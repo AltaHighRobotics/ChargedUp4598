@@ -23,6 +23,7 @@ public final class Constants {
     public static final double CLAW_DOWN_SPEED = -0.15;
     public static final double CLAW_SUCK_SPEED = 0.75;
     public static final double CLAW_SPIT_SPEED = -0.75;
+    public static final double CLAW_IDLE_SPEED = 0.2;
     
     // Swerve module.
     public static final double SWERVE_MODULE_TURN_ENCODER_DISTANCE_PER_PULSE = 12.600000000000001; // 42 steps per rotation
@@ -93,7 +94,7 @@ public final class Constants {
     public static final int CLAW_MOTOR_TWO = 15;
     public static final int CLAW_ENCODER_A = 0;
     public static final int CLAW_ENCODER_B = 0;
-    public static final int CLAW_MOTOR_TWO_CURRENT_LIMIT = 10;
+    public static final int CLAW_MOTOR_TWO_CURRENT_LIMIT = 5;
 
     public static final double CLAW_ONE_UPPER_LIMIT = -12.0;
     public static final double CLAW_ONE_LOWER_LIMIT = -4853.0;
@@ -110,7 +111,7 @@ public final class Constants {
     public static final double SMALL_ARM_CURRENT_LIMIT = 35.0;
     public static final int ARM_LIMIT_SWITCH = 0;
     public static final double BIG_ARM_THRESHOLD = 13922.0; // 5000
-    public static final double SMALL_ARM_THRESHOLD = 1900; // 1848
+    public static final double SMALL_ARM_THRESHOLD = 1900.0; // 1533.0
     public static final int COOLER_SOLENOID = 3;
 
     public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00004, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.4, 0.4);
@@ -158,6 +159,7 @@ public final class Constants {
 
     public static final double AUTO_ALIGNMENT_REFLECTIVE_VERTICAL_THRESHOLD = 0.1;
     public static final double AUTO_ALIGNMENT_REFLECTIVE_HORIZONTAL_THRESHOLD = 1;
+
 
     //0.227
 
