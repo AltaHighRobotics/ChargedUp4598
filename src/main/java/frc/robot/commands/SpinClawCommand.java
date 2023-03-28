@@ -2,39 +2,42 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ArmPositions;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmAndClawSub;
+import frc.robot.Constants;
 
-public class ArmHigherPositionCommand extends CommandBase {
-  /** Creates a new ArmHigherPositionCommand. */
+public class SpinClawCommand extends CommandBase {
+  /** Creates a new SpinClawCommand. */
   private ArmAndClawSub m_armAndClawSub;
-  public ArmHigherPositionCommand(ArmAndClawSub armAndClawSub) {
+
+  public SpinClawCommand(ArmAndClawSub armAndClawSub) {
     m_armAndClawSub = armAndClawSub;
-    // Use addRequirements() here to declare subsystem dependencies.
+
     addRequirements(m_armAndClawSub);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_armAndClawSub.armHigher();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_armAndClawSub.setClawTwoMotor(Constants.CLAW_SUCK_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_armAndClawSub.setClawTwoMotor(Constants.CLAW_SPIT_SPEED);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

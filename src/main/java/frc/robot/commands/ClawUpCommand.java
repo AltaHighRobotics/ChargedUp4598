@@ -26,13 +26,13 @@ public class ClawUpCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_armAndClawSub.setClawOneMotor(Constants.CLAW_UP_SPEED);
+    m_armAndClawSub.setClawOneMotor(Constants.CLAW_UP_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //m_armAndClawSub.stopClawOneMotor();
+    m_armAndClawSub.stopClawOneMotor();
   }
 
   // Returns true when the command should end.

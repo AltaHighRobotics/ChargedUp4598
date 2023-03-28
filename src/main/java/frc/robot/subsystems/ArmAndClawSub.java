@@ -126,7 +126,10 @@ public class ArmAndClawSub extends SubsystemBase {
 
     // Claw motors.
     clawMotorOne = new WPI_TalonSRX(Constants.CLAW_MOTOR_ONE);
+    clawMotorOne.setNeutralMode(NeutralMode.Brake);
+
     clawMotorTwo = new CANSparkMax(Constants.CLAW_MOTOR_TWO, CANSparkMaxLowLevel.MotorType.kBrushless);
+    clawMotorTwo.setSmartCurrentLimit(Constants.CLAW_MOTOR_TWO_CURRENT_LIMIT);
 
     // Claw encoders.
     clawTwoEncoder = clawMotorTwo.getEncoder();
@@ -261,7 +264,7 @@ public class ArmAndClawSub extends SubsystemBase {
   }
 
   public void resetSmallArmEncoder() {
-    smallArmEncoderOffset -= getSmallArmPosition();
+    smallArmMotor.setSelectedSensorPosition(0.0);
   }
 
   public void resetBigArmEncoder() {
@@ -326,20 +329,27 @@ public class ArmAndClawSub extends SubsystemBase {
     SmartDashboard.putBoolean("Small arm at position", smallArmAtPosition);
     SmartDashboard.putBoolean("Big arm at position", bigArmAtPosition);
 
+    /*
+    if (1 == 1 && 5 < 6) {
+      return;
+    }
+    */
+
     switch (positioningOrder) {
       case SAME_TIME:
         setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
         setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
-        setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+        //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
 
         SmartDashboard.putString("Arm positioning order", "same time");
         break;
       case SMALL_ARM_FIRST:
         setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
-        setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+        //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
 
         if (smallArmAtPosition) {
           setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
+          positioningOrder = PositioningOrders.SAME_TIME;
         } else {
           stopBigArmMotor();
         }
@@ -348,10 +358,11 @@ public class ArmAndClawSub extends SubsystemBase {
         break;
       case BIG_ARM_FIRST:
         setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
-        setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+        //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
 
         if (bigArmAtPosition) {
           setSmallArmMotor(smallArmPid.runPID(smallArmSetPoint, getSmallArmPosition()));
+          positioningOrder = PositioningOrders.SAME_TIME;
         } else {
           stopSmallArmMotor();
         }
@@ -363,9 +374,10 @@ public class ArmAndClawSub extends SubsystemBase {
         setBigArmMotor(bigArmPid.runPID(bigArmSetPoint, getBigArmPosition()));
 
         if (bigArmAtPosition && smallArmAtPosition) {
-          setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+          //setClawOneMotor(clawOnePid.runPID(clawOneSetpoint, getClawOnePosition()));
+          positioningOrder = PositioningOrders.SAME_TIME;
         } else {
-          stopClawOneMotor();
+          //stopClawOneMotor();
         }
 
         SmartDashboard.putString("Arm positioning order", "claw last");
@@ -435,8 +447,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(33218.0);
-    setSmallArmSetPoint(33218.0);
+    setBigArmSetPoint(-31588.0);
+    setSmallArmSetPoint(-193868.0);
+    setClawOneSetpoint(-945.0);
 
     SmartDashboard.putString("Arm position", "higher cone");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -457,8 +470,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(-16666.0);
-    setSmallArmSetPoint(79440.0);
+    setBigArmSetPoint(-31588.0);
+    setSmallArmSetPoint(-191836.0);
+    setClawOneSetpoint(-358.0);
     
     SmartDashboard.putString("Arm position", "middle cone");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -472,11 +486,11 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(9086.000000);
-    setSmallArmSetPoint(21680.000000);
-    setClawOneSetpoint(-3342.0); //-4342
+    setBigArmSetPoint(28258.0); //-9630.0
+    setSmallArmSetPoint(-60269.0);
+    setClawOneSetpoint(-3076.0); //-4342
     SmartDashboard.putString("Arm position", "grab");
-    positioningOrder = PositioningOrders.CLAW_LAST;
+    positioningOrder = PositioningOrders.BIG_ARM_FIRST;
     clearPositions();
 
     lastPositionOption = ArmPositionOptions.GRAB;
@@ -487,9 +501,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(9086.000000);
-    setSmallArmSetPoint(30970.0); //29970
-    setClawOneSetpoint(-4342.0);
+    setBigArmSetPoint(26587.0);
+    setSmallArmSetPoint(-91019.0); //29970
+    setClawOneSetpoint(-4953.0); //-4342.0
     SmartDashboard.putString("Arm position", "higher grab");
     positioningOrder = PositioningOrders.CLAW_LAST;
     clearPositions();
@@ -516,8 +530,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(-29826.0);
-    setSmallArmSetPoint(80004.0);
+    setBigArmSetPoint(-32300.0);
+    setSmallArmSetPoint(-205847.0);
+    setClawOneSetpoint(-595.0);
 
     SmartDashboard.putString("Arm position", "middle");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -530,8 +545,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(33806.0);
-    setSmallArmSetPoint(86609.0);
+    setBigArmSetPoint(28749.0);
+    setSmallArmSetPoint(-214637.0);
+    setClawOneSetpoint(-928.0);
 
     SmartDashboard.putString("Arm position", "higher");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -552,8 +568,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(5398.0);
-    setSmallArmSetPoint(2886.0);
+    setBigArmSetPoint(9099.0);
+    setSmallArmSetPoint(-2676.0);
+    setClawOneSetpoint(-43.0);
     SmartDashboard.putString("Arm position", "rest");
     positioningOrder = PositioningOrders.SAME_TIME;
     clearPositions();

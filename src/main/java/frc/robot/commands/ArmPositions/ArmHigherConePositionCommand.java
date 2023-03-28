@@ -7,10 +7,10 @@ package frc.robot.commands.ArmPositions;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmAndClawSub;
 
-public class ArmHigherPositionCommand extends CommandBase {
+public class ArmHigherConePositionCommand extends CommandBase {
   /** Creates a new ArmHigherPositionCommand. */
   private ArmAndClawSub m_armAndClawSub;
-  public ArmHigherPositionCommand(ArmAndClawSub armAndClawSub) {
+  public ArmHigherConePositionCommand(ArmAndClawSub armAndClawSub) {
     m_armAndClawSub = armAndClawSub;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_armAndClawSub);
@@ -19,7 +19,7 @@ public class ArmHigherPositionCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_armAndClawSub.armHigher();
+    m_armAndClawSub.armHigherCone();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
