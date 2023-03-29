@@ -125,8 +125,8 @@ public class RobotContainer {
     final JoystickButton zeroClawCommand = new JoystickButton(m_driveController, 7);
 
     //final JoystickButton lowGrabButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
-    //final JoystickButton wristDownButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
-    //final JoystickButton wristUpButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
+    final JoystickButton wristDownButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
+    final JoystickButton wristUpButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     //final JoystickButton limeLightTestButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     //final JoystickButton limeLightToggleButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
     //final JoystickButton spinClawButton = new JoystickButton(m_driveController, Constants.XBOX_X_BUTTON);

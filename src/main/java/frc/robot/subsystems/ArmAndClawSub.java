@@ -451,18 +451,20 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    //setBigArmSetPoint(28749.000000);
-    //setSmallArmSetPoint(-193868.0);
-    setClawOneSetpoint(-945.0);
+    setBigArmSetPoint(27927.0);
+    setSmallArmSetPoint(264026.0); // 270026.0
+    setClawOneSetpoint(-1040.0);
 
     SmartDashboard.putString("Arm position", "higher cone");
     positioningOrder = PositioningOrders.SAME_TIME;
     clearPositions();
 
+    /*
     Vector<ArmPositioningData> newArmPositions = new Vector<ArmPositioningData>();
     newArmPositions.add(new ArmPositioningData(-193868.0, 0.0, PositioningOrders.SAME_TIME));
     newArmPositions.add(new ArmPositioningData(-193868.0, 28749.0, PositioningOrders.SAME_TIME));
     setArmPositions(newArmPositions);
+    */
 
     lastPositionOption = ArmPositionOptions.HIGHER_CONE;
   }
@@ -472,9 +474,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(-31588.0);
-    setSmallArmSetPoint(-190000.0);//-191836.0
-    setClawOneSetpoint(-358.0);
+    setBigArmSetPoint(-29995.0);
+    setSmallArmSetPoint(248812.0);//254812.0
+    setClawOneSetpoint(-377.0);
     
     SmartDashboard.putString("Arm position", "middle cone");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -503,9 +505,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(26587.0);
-    setSmallArmSetPoint(-94019.0); // -91019.0
-    setClawOneSetpoint(-4953.0); //-4342.0
+    setBigArmSetPoint(6312.0);
+    setSmallArmSetPoint(126517.0); // -91019.0
+    setClawOneSetpoint(-5078.0); //-4342.0
     SmartDashboard.putString("Arm position", "higher grab");
     positioningOrder = PositioningOrders.CLAW_LAST;
     clearPositions();
@@ -532,9 +534,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(-32300.0);
-    setSmallArmSetPoint(-205847.0);
-    setClawOneSetpoint(-595.0);
+    setBigArmSetPoint(-29995.0);
+    setSmallArmSetPoint(253807.0);
+    setClawOneSetpoint(-404.0);
 
     SmartDashboard.putString("Arm position", "middle");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -547,9 +549,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(28749.0);
-    setSmallArmSetPoint(-214637.0);
-    setClawOneSetpoint(-928.0);
+    setBigArmSetPoint(27489.0);
+    setSmallArmSetPoint(271518.0);
+    setClawOneSetpoint(-564.0);
 
     SmartDashboard.putString("Arm position", "higher");
     positioningOrder = PositioningOrders.SAME_TIME;
@@ -570,9 +572,9 @@ public class ArmAndClawSub extends SubsystemBase {
       return;
     }
 
-    setBigArmSetPoint(9099.0);
-    setSmallArmSetPoint(-2676.0);
-    setClawOneSetpoint(-43.0);
+    setBigArmSetPoint(11768.0);
+    setSmallArmSetPoint(19280.0);
+    setClawOneSetpoint(-910.0);
     SmartDashboard.putString("Arm position", "rest");
     positioningOrder = PositioningOrders.SAME_TIME;
     clearPositions();

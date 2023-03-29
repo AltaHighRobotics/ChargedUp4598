@@ -114,7 +114,7 @@ public final class Constants {
     public static final double SMALL_ARM_THRESHOLD = 1900.0; // 1533.0
     public static final int COOLER_SOLENOID = 3;
 
-    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00004, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.4, 0.4);
+    public static final PIDConfiguration SMALL_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 10.0, 0, 0, 0, 0, 0, 0, -0.4, 0.4);
     public static final PIDConfiguration BIG_ARM_PID = new PIDConfiguration(0.00006, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.5);
 
     // Limelight.
