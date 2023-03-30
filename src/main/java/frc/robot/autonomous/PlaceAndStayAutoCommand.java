@@ -14,8 +14,8 @@ import utilities.ConfigurablePID;
 import utilities.AutoAlignment;
 import frc.robot.Constants;
 
-public class Autonomous1Command extends CommandBase {
-  /** Creates a new Autonomous1Command. */
+public class PlaceAndStayAutoCommand extends CommandBase {
+  /** Creates a new PlaceAndStayAutoCommand. */
   private DriveTrainSub m_driveTrainSub;
   private ArmAndClawSub m_armAndClawSub;
   private Vision m_vision;
@@ -33,7 +33,7 @@ public class Autonomous1Command extends CommandBase {
 
   private int stage;
 
-  public Autonomous1Command(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
+  public PlaceAndStayAutoCommand(DriveTrainSub driveTrainSub, ArmAndClawSub armAndClawSub, Vision vision) {
     m_driveTrainSub = driveTrainSub;
     m_armAndClawSub = armAndClawSub;
     m_vision = vision;
@@ -111,35 +111,6 @@ public class Autonomous1Command extends CommandBase {
         if (System.currentTimeMillis() - startTime >= Constants.WAIT_TIME) {
           stage = 4;
           startTime = 0;
-        }
-
-        break;
-      case 4: // Drive back and arm rest.
-        m_armAndClawSub.armRest();
-        m_armAndClawSub.setClawTwoMotor(Constants.CLAW_IDLE_SPEED);
-        m_driveTrainSub.setSwerveDrive(0.0, Constants.AUTO_DRIVE_BACK_SPEED, 0.0, false, false);
-        //atPosition = driveBackAutoAlignment.run();
-
-        if (startTime == 0) {
-          startTime = System.currentTimeMillis();
-        }
-
-        // Set speed.
-        /*
-        speed = distancePid.runPID(Constants.AUTO_ONE_DISTANCE, m_driveTrainSub.getAvgWheelEncoder());
-        m_driveTrainSub.setSwerveDrive(0.0, speed, 0.0, false, false);
-        atPosition = Math.abs(Constants.AUTO_ONE_DISTANCE - m_driveTrainSub.getAvgWheelEncoder()) <= Constants.DISTANCE_THRESHOLD;
-
-        if (atPosition && m_armAndClawSub.isAtFinalPosition()) {
-          stage = 5;
-          m_driveTrainSub.stop();
-        }
-        */
-
-        // Next stage.
-        if (System.currentTimeMillis() - startTime >= Constants.AUTO_DRIVE_BACK_TIME) {
-          stage = 5;
-          m_driveTrainSub.stop();
         }
 
         break;

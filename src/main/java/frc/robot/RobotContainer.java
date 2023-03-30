@@ -90,6 +90,7 @@ public class RobotContainer {
   // Autonomous.
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
   private final Autonomous1Command m_autonomous1Command = new Autonomous1Command(m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final PlaceAndStayAutoCommand m_placeAndStayAutoCommand = new PlaceAndStayAutoCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
 
   private final SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
 
@@ -101,7 +102,8 @@ public class RobotContainer {
     // Configure the button bindings
 
     // Autonomous chooser.
-    m_autonomousChooser.setDefaultOption("Grab and drive back", m_autonomous1Command);
+    m_autonomousChooser.setDefaultOption("Place and drive back", m_autonomous1Command);
+    m_autonomousChooser.addOption("Place and stay", m_placeAndStayAutoCommand);
     m_autonomousChooser.addOption("Balance", m_balanceAutoCommand);
     SmartDashboard.putData(m_autonomousChooser);
 

@@ -132,6 +132,8 @@ public final class Constants {
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(-0.01, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final double BALANCE_AUTO_DRIVE_TO_ANGLE = 12.0;
     public static final double BALANCE_AUTO_SPEED = 0.2;
+    public static final double AUTO_DRIVE_BACK_SPEED = 0.3;
+    public static final long AUTO_DRIVE_BACK_TIME = 2500;
 
     //old value for vertical setpoint 0.227
     public static final double DRIVE_BACK_VERTICAL_SETPOINT = 0.350;
@@ -140,7 +142,7 @@ public final class Constants {
 
     //Placing Command
     public static final int STOP_PLACE_COMMAND_BUTTON = XBOX_X_BUTTON;
-    public static final long WAIT_TIME = 500;
+    public static final long WAIT_TIME = 1500;
 
     public static final double LEFT_VERTICAL_SETPOINT = 0.64;
     public static final double LEFT_HORIZONTAL_SETPOINT = -9;

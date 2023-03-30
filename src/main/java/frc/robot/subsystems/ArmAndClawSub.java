@@ -550,7 +550,7 @@ public class ArmAndClawSub extends SubsystemBase {
     }
 
     setBigArmSetPoint(27489.0);
-    setSmallArmSetPoint(271518.0);
+    setSmallArmSetPoint(261518.0); // decreased by 10000
     setClawOneSetpoint(-664.0); //decreased by 100
 
     SmartDashboard.putString("Arm position", "higher");
