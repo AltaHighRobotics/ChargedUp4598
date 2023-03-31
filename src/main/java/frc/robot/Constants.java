@@ -131,7 +131,7 @@ public final class Constants {
     public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.08, 0.00035, 0.005, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.25, 0.25);
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(-0.01, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final double BALANCE_AUTO_DRIVE_TO_ANGLE = 12.0;
-    public static final double BALANCE_AUTO_SPEED = 0.2;
+    public static final double BALANCE_AUTO_SPEED = 0.4;
     public static final double AUTO_DRIVE_BACK_SPEED = 0.3;
     public static final long AUTO_DRIVE_BACK_TIME = 2500;
 

@@ -84,6 +84,7 @@ public class RobotContainer {
   private final ArmMiddleConeCommand m_ArmMiddleConeCommand = new ArmMiddleConeCommand(m_armAndClawSub);
   private final ArmHighGrabPositionCommand m_ArmHighGrabPositionCommand = new ArmHighGrabPositionCommand(m_armAndClawSub);
   private final ArmGrabPositionCommand m_ArmGrabPositionCommand = new ArmGrabPositionCommand(m_armAndClawSub);
+  private final ArmGrabConeGroundCommand m_armGrabConeGroundCommand = new ArmGrabConeGroundCommand(m_armAndClawSub);
 
 
 
@@ -91,6 +92,7 @@ public class RobotContainer {
   private final BalanceAutoCommand m_balanceAutoCommand = new BalanceAutoCommand(m_driveTrainSub);
   private final Autonomous1Command m_autonomous1Command = new Autonomous1Command(m_driveTrainSub, m_armAndClawSub, m_Vision);
   private final PlaceAndStayAutoCommand m_placeAndStayAutoCommand = new PlaceAndStayAutoCommand(m_driveTrainSub, m_armAndClawSub, m_Vision);
+  private final PlaceAndBalanceAutoCommand m_placeAndBalanceAutoCommand = new PlaceAndBalanceAutoCommand(m_driveTrainSub, m_armAndClawSub);
 
   private final SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
 
@@ -105,6 +107,7 @@ public class RobotContainer {
     m_autonomousChooser.setDefaultOption("Place and drive back", m_autonomous1Command);
     m_autonomousChooser.addOption("Place and stay", m_placeAndStayAutoCommand);
     m_autonomousChooser.addOption("Balance", m_balanceAutoCommand);
+    m_autonomousChooser.addOption("Place and balance", m_placeAndBalanceAutoCommand);
     SmartDashboard.putData(m_autonomousChooser);
 
     configureButtonBindings();
@@ -122,11 +125,11 @@ public class RobotContainer {
     final JoystickButton zeroAngleButton = new JoystickButton(m_driveController, Constants.XBOX_Y_BUTTON);
     final JoystickButton clawIntakeButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
     final JoystickButton clawOutButton = new JoystickButton(m_driveController, Constants.XBOX_B_BUTTON);
+    final JoystickButton lowGrabButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     final JoystickButton highGrabButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
-    final JoystickButton restButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
+    final JoystickButton restButton = new JoystickButton(m_driveController, Constants.XBOX_X_BUTTON);
     final JoystickButton zeroClawCommand = new JoystickButton(m_driveController, 7);
 
-    //final JoystickButton lowGrabButton = new JoystickButton(m_driveController, Constants.XBOX_A_BUTTON);
     final JoystickButton wristDownButton = new JoystickButton(m_driveController, Constants.XBOX_RIGHT_BUMPER);
     final JoystickButton wristUpButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
     //final JoystickButton limeLightTestButton = new JoystickButton(m_driveController, Constants.XBOX_LEFT_BUMPER);
@@ -136,7 +139,7 @@ public class RobotContainer {
 
 
     zeroAngleButton.whenPressed(m_zeroAngleCommand);
-    //lowGrabButton.onTrue(m_armGrabPositionCommand);
+    lowGrabButton.onTrue(m_armGrabPositionCommand);
     highGrabButton.onTrue(m_ArmHighGrabPositionCommand);
     restButton.onTrue(m_armRestPositionCommand);
     //wristDownButton.whileTrue(m_ClawDownCommand);
@@ -165,6 +168,7 @@ public class RobotContainer {
     middleRightButton.onTrue(m_armMiddlePositionCommand);
     topCenterButton.onTrue(m_ArmHigherConePositionCommand);
     middleCenterButton.onTrue(m_ArmMiddleConeCommand);
+    bottomLeftButton.onTrue(m_armGrabConeGroundCommand);
 
     // Evil haha.
 
