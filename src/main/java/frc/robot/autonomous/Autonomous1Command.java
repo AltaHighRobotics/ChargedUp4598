@@ -114,9 +114,16 @@ public class Autonomous1Command extends CommandBase {
         }
 
         break;
-      case 4: // Drive back and arm rest.
-        m_armAndClawSub.armRest();
+      case 4: // Arm rest.
         m_armAndClawSub.setClawTwoMotor(Constants.CLAW_IDLE_SPEED);
+        m_armAndClawSub.armRest();
+
+        if (m_armAndClawSub.isAtFinalPosition()) {
+          stage = 5;
+        }
+
+        break;
+      case 5: // Drive back.
         m_driveTrainSub.setSwerveDrive(0.0, Constants.AUTO_DRIVE_BACK_SPEED, 0.0, false, false);
         //atPosition = driveBackAutoAlignment.run();
 
@@ -138,7 +145,7 @@ public class Autonomous1Command extends CommandBase {
 
         // Next stage.
         if (System.currentTimeMillis() - startTime >= Constants.AUTO_DRIVE_BACK_TIME) {
-          stage = 5;
+          stage = 6;
           m_driveTrainSub.stop();
         }
 

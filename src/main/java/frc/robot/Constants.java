@@ -17,7 +17,7 @@ import utilities.SwerveModuleConfig;
  */
 public final class Constants {
     // Speed.
-    public static final double DRIVE_SPEED = 0.8; //0.25
+    public static final double DRIVE_SPEED = 0.5; //0.8
     public static final double SMALL_ARM_LOWER_SPEED = -0.15;
     public static final double CLAW_UP_SPEED = 0.5;
     public static final double CLAW_DOWN_SPEED = -0.15;
@@ -45,7 +45,7 @@ public final class Constants {
 
     public static final SwerveModuleConfig []SWERVE_MODULE_CONFIGS = {
         new SwerveModuleConfig(20, 9, true, false), // Front right
-        new SwerveModuleConfig(1, 3, false, false), // Front left
+        new SwerveModuleConfig(32, 3, false, false), // Front left
         new SwerveModuleConfig(5, 8, true, false), // Back right
         new SwerveModuleConfig(7, 6, false, false) // Back left
     };
@@ -131,7 +131,7 @@ public final class Constants {
     public static final PIDConfiguration AUTONOMOUS_DISTANCE_PID = new PIDConfiguration(0.08, 0.00035, 0.005, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.25, 0.25);
     public static final PIDConfiguration AUTONOMOUS_BALANCE_PID = new PIDConfiguration(-0.01, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     public static final double BALANCE_AUTO_DRIVE_TO_ANGLE = 12.0;
-    public static final double BALANCE_AUTO_SPEED = 0.4;
+    public static final double BALANCE_AUTO_SPEED = 0.47; //0.4
     public static final double AUTO_DRIVE_BACK_SPEED = 0.3;
     public static final long AUTO_DRIVE_BACK_TIME = 2500;
 
