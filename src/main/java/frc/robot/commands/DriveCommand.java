@@ -42,10 +42,15 @@ public class DriveCommand extends CommandBase {
 
   // its debugging time )---:
   private void test() {
-    for (SwerveModule m : m_driveTrainSub.getSwerveModules()) {
-      m.setWheelMotor(0.2);
-      m.setTurnMotor(0.3);
-    }
+    SwerveModule testModule = m_driveTrainSub.getSwerveModuleFromId(Constants.FRONT_RIGHT_MODULE);
+    double deg = m_driveController.getRawAxis(Constants.LEFT_STICK_X) * 360;
+
+    testModule.setDesiredAngle(deg);
+
+    testModule.run();
+
+    SmartDashboard.putNumber("joystick", deg);
+    SmartDashboard.putNumber("Test angle", testModule.getTurnEncoderPosition());
   }
 
   private void test2() {
@@ -66,6 +71,9 @@ public class DriveCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    // For debugin (--:
+    //m_driveTrainSub.getSwerveModuleFromId(Constants.FRONT_RIGHT_MODULE).resetTurnEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
