@@ -47,7 +47,7 @@ public class RobotContainer {
   private final Vision m_Vision = new Vision();
 
   // Commands
-  private final DriveCommand m_driveCommand = new DriveCommand(m_driveTrainSub, m_driveController);
+  private final DriveCommand m_driveCommand = new DriveCommand(m_driveTrainSub, m_driveController, m_armAndClawSub);
   private final ZeroAngleCommand m_zeroAngleCommand = new ZeroAngleCommand(m_driveTrainSub);
   private final TestArmCommad m_testArmCommand = new TestArmCommad(m_armAndClawSub);
   private final OpenClawCommand m_openClawCommand = new OpenClawCommand(m_armAndClawSub);
@@ -148,8 +148,8 @@ public class RobotContainer {
     //limeLightToggleButton.onTrue(m_AprilTagToggleCommand);
     //spinClawButton.toggleOnTrue(m_spinClawCommand);
     zeroClawCommand.onTrue(m_zeroClawCommand);
-    clawIntakeButton.whileTrue(m_ClawIntakeCommand);
-    clawOutButton.whileTrue(m_clawOutCommand);
+    //clawIntakeButton.whileTrue(m_ClawIntakeCommand);
+    //clawOutButton.whileTrue(m_clawOutCommand);
 
     //Button Box Bindings
     final JoystickButton toggleButton = new JoystickButton(m_ButtonBox, Constants.TOGGLE_BUTTON);

@@ -17,7 +17,9 @@ import utilities.SwerveModuleConfig;
  */
 public final class Constants {
     // Speed.
-    public static final double DRIVE_SPEED = 0.5; //0.8
+    public static final double DRIVE_SPEED = 0.4; //0.8 (idaho 0.5) 0.65
+    public static final double REST_DRIVE_SPEED = 0.8; // YOU SHALL DIE IF > 0.8
+    public static final double TURN_SPEED = 0.5;
     public static final double SMALL_ARM_LOWER_SPEED = -0.15;
     public static final double CLAW_UP_SPEED = 0.5;
     public static final double CLAW_DOWN_SPEED = -0.15;
@@ -44,10 +46,10 @@ public final class Constants {
     public static final int SWERVE_MODULE_COUNT = 4;
 
     public static final SwerveModuleConfig []SWERVE_MODULE_CONFIGS = {
-        new SwerveModuleConfig(20, 9, false, false), // Front right
-        new SwerveModuleConfig(7, 3, true, false), // Front left
-        new SwerveModuleConfig(32, 8, false, false), // Back right
-        new SwerveModuleConfig(5, 6, true, false) // Back left
+        new SwerveModuleConfig(20, 9, true, false), // Front right
+        new SwerveModuleConfig(7, 3, false, false), // Front left
+        new SwerveModuleConfig(32, 8, true, false), // Back right
+        new SwerveModuleConfig(5, 6, false, false) // Back left
     };
     
     public static final double VEHICLE_WHEELBASE = 1.0;
@@ -99,7 +101,7 @@ public final class Constants {
     public static final double CLAW_ONE_UPPER_LIMIT = -12.0;
     public static final double CLAW_ONE_LOWER_LIMIT = -4853.0;
 
-    public static final PIDConfiguration CLAW_ONE_PID = new PIDConfiguration(-0.0005, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 0.25);
+    public static final PIDConfiguration CLAW_ONE_PID = new PIDConfiguration(0.0005, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -1.0, 0.25);
     public static final PIDConfiguration CLAW_TWO_PID = new PIDConfiguration(0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, -0.2, 0.2);
     
     // Arm.

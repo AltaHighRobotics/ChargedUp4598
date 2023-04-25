@@ -6,11 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSub;
+import frc.robot.subsystems.ArmAndClawSub.ArmPositionOptions;
 import utilities.MathTools;
 import utilities.SwerveModule;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.ArmAndClawSub;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import java.lang.Math;
 import frc.robot.Constants;
@@ -19,6 +22,7 @@ public class DriveCommand extends CommandBase {
   /** Creates a new DriveCommand. */
   private DriveTrainSub m_driveTrainSub;
   private XboxController m_driveController;
+  private ArmAndClawSub m_armAndClawSub;
 
   private double rightStickX;
   private double rightStickY;
@@ -29,14 +33,15 @@ public class DriveCommand extends CommandBase {
   private double speed = 0.0;
   private double rotation = 0.0;
 
-  public DriveCommand(DriveTrainSub driveTrainSub, XboxController driveController) {
+  public DriveCommand(DriveTrainSub driveTrainSub, XboxController driveController, ArmAndClawSub armAndClawSub) {
     m_driveTrainSub = driveTrainSub;
     m_driveController = driveController;
+    m_armAndClawSub = armAndClawSub;
 
     m_driveTrainSub.resetAllEncoders();
     m_driveTrainSub.resetGyro();
 
-    addRequirements(m_driveTrainSub);
+    addRequirements(m_driveTrainSub, m_armAndClawSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -116,17 +121,44 @@ public class DriveCommand extends CommandBase {
       m_driveTrainSub.getSwerveModuleFromId(0).getSpeed()
     );
 
+    double speedLimit;
+
+    if (m_armAndClawSub.getLastPositionOption() == ArmPositionOptions.REST) {
+      speedLimit = Constants.REST_DRIVE_SPEED;
+    } else {
+      speedLimit = Constants.DRIVE_SPEED;
+    }
+
+    SmartDashboard.putNumber("Speed limit", speedLimit);
+
     // Set swerve drive.
-    m_driveTrainSub.setSwerveDrive(
+    m_driveTrainSub.setSwerveDriveWithLimit(
       Math.pow(strafe, 2.0) * Math.signum(strafe), 
       -Math.pow(speed, 2.0) * Math.signum(speed), 
-      Math.pow(rotation, 2.0) * Math.signum(rotation),
+      Math.pow(rotation, 2.0) * Math.signum(rotation) * Constants.TURN_SPEED,
       true, 
-      true
+      speedLimit
     );
 
     // Call run method to run PID loops and other stuff.
     m_driveTrainSub.run();
+
+    // Claw claw dfijfdkjdfkjldf
+
+    // Don't run while auto.
+    if (!DriverStation.isTeleop()) {
+      return;
+    }
+
+    //System.out.println("hihi");
+
+    if (m_driveController.getAButton()) {
+      m_armAndClawSub.setClawTwoMotor(Constants.CLAW_SUCK_SPEED);
+    } else if (m_driveController.getBButton()) {
+      m_armAndClawSub.setClawTwoMotor(Constants.CLAW_SPIT_SPEED);
+    } else {
+      m_armAndClawSub.setClawTwoMotor(Constants.CLAW_IDLE_SPEED);
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -255,7 +255,13 @@ public class DriveTrainSub extends SubsystemBase {
 
   // Usefull stuff: https://www.chiefdelphi.com/uploads/default/original/3X/e/f/ef10db45f7d65f6d4da874cd26db294c7ad469bb.pdf
   // Use limitSpeedMode when its driver controller.
+
+  // dsfkjldfhjocvkjdgkjkjlnj
   public void setSwerveDrive(double strafe, double speed, double rotation, boolean fieldCentric, boolean limitSpeedMode) {
+    setSwerveDriveWithLimit(strafe, speed, rotation, fieldCentric, 1.0);
+  }
+
+  public void setSwerveDriveWithLimit(double strafe, double speed, double rotation, boolean fieldCentric, double speedLimit) {
     int i;
     double x, y, z, temp;
 
@@ -305,11 +311,7 @@ public class DriveTrainSub extends SubsystemBase {
       // Covert angle unit.
       moduleAngles[i] = MathTools.makeNonNegAngle(Math.toDegrees(moduleAngles[i]));
 
-      if (limitSpeedMode) {
-        swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i] * Constants.DRIVE_SPEED);
-      } else {
-        swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i]);
-      }
+      swerveModuleSubs[i].setWheelMotor(moduleSpeeds[i] * speedLimit); 
       
       swerveModuleSubs[i].setDesiredAngle(moduleAngles[i]);
     }
